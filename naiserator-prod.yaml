@@ -7,6 +7,14 @@ metadata:
     team: teamsykmelding
 spec:
   image: {{ image }}
+  gcp:
+    sqlInstances:
+      - name: narmesteleder-varsel-db-instance
+        type: POSTGRES_12
+        diskSize: 10
+        databases:
+          - name: narmesteleder-varsel
+            envVarPrefix: NAIS_DATABASE
   replicas:
     min: 1
     max: 4
@@ -22,7 +30,7 @@ spec:
     path: /is_ready
     initialDelay: 30
     periodSeconds: 5
-    timeout: 5
+    timeout: 1
   prometheus:
     enabled: true
     path: /prometheus
@@ -35,6 +43,15 @@ spec:
       memory: 768Mi
   vault:
     enabled: false
+  envFrom:
+    - secret: narmesteleder-varsel-secret
   ingresses:
     - "https://narmesteleder-varsel.intern.nav.no"
   webproxy: true
+  kafka:
+    pool: nav-prod
+  env:
+    - name: KAFKA_CLIENT_ID
+      value: narmesteleder-varsel
+    - name: KAFKA_BOOTSTRAP_SERVERS_URL
+      value: SASL_SSL://a01apvl00145.adeo.no:8443,SASL_SSL://a01apvl00146.adeo.no:8443,SASL_SSL://a01apvl00147.adeo.no:8443,SASL_SSL://a01apvl00149.adeo.no:8443
