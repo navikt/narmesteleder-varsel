@@ -28,6 +28,7 @@ import no.nav.syfo.sykmeldingvarsel.kafka.SendtSykmeldingConsumerService
 import org.apache.kafka.clients.consumer.ConsumerConfig
 import org.apache.kafka.clients.consumer.KafkaConsumer
 import org.apache.kafka.clients.producer.KafkaProducer
+import org.apache.kafka.clients.producer.ProducerConfig
 import org.apache.kafka.common.serialization.StringDeserializer
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
@@ -69,8 +70,9 @@ fun main() {
     )
     val kafkaProducerDoknotifikasjon = KafkaProducer<String, NotifikasjonMedkontaktInfo>(
         KafkaUtils
-            .getAivenKafkaConfig()
-            .toProducerConfig("${env.applicationName}-producer", valueSerializer = KafkaAvroSerializer::class, keySerializer = KafkaAvroSerializer::class)
+            .getAivenKafkaConfig().apply {
+                setProperty("schema.registry.url", env.schemaRegistryUrl)
+            }.toProducerConfig("${env.applicationName}-producer", valueSerializer = KafkaAvroSerializer::class, keySerializer = KafkaAvroSerializer::class)
     )
     val doknotifikasjonProducer = DoknotifikasjonProducer(kafkaProducerDoknotifikasjon, env.doknotifikasjonTopic)
     val sendtSykmeldingVarselService = SendtSykmeldingVarselService(database, doknotifikasjonProducer)
