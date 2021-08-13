@@ -1,6 +1,7 @@
 package no.nav.syfo.narmesteleder.db
 
 import no.nav.syfo.application.db.DatabaseInterface
+import no.nav.syfo.application.db.toList
 import no.nav.syfo.narmesteleder.model.NarmesteLeder
 import java.sql.Connection
 import java.sql.ResultSet
@@ -46,6 +47,20 @@ fun DatabaseInterface.lagreNarmesteLeder(narmesteLeder: NarmesteLeder) {
     connection.use { connection ->
         connection.lagreNarmesteleder(narmesteLeder)
         connection.commit()
+    }
+}
+
+fun DatabaseInterface.finnNarmestelederForSykmeldt(fnr: String, orgnummer: String): NarmesteLeder? {
+    return connection.use { connection ->
+        connection.prepareStatement(
+            """
+           SELECT * from narmeste_leder where bruker_fnr = ? and orgnummer = ?;
+        """
+        ).use {
+            it.setString(1, fnr)
+            it.setString(2, orgnummer)
+            it.executeQuery().toList { toNarmesteLeder() }.firstOrNull()
+        }
     }
 }
 

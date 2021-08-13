@@ -21,6 +21,10 @@ val postgresVersion = "42.2.5"
 val flywayVersion = "5.2.4"
 val hikariVersion = "3.3.0"
 val postgresEmbeddedVersion = "0.13.3"
+val kafkaVersion = "2.4.0"
+val avroVersion = "1.8.2"
+val confluentVersion = "5.3.0"
+val doknotifikasjonAvroVersion = "1.2021.06.22-11.27-265ce1fe1ab4"
 
 tasks.withType<Jar> {
     manifest.attributes["Main-Class"] = "no.nav.syfo.BootstrapKt"
@@ -49,6 +53,7 @@ repositories {
     maven(url = "https://dl.bintray.com/spekframework/spek-dev")
     maven(url = "https://packages.confluent.io/maven/")
     maven(url = "https://kotlin.bintray.com/kotlinx")
+    maven(url = "https://jitpack.io")
     maven {
         url = uri("https://maven.pkg.github.com/navikt/syfosm-common")
         credentials {
@@ -75,6 +80,12 @@ dependencies {
     implementation("io.ktor:ktor-auth-jwt:$ktorVersion")
 
     implementation("no.nav.helse:syfosm-common-kafka:$smCommonVersion")
+    implementation("no.nav.helse:syfosm-common-models:$smCommonVersion")
+
+    implementation("org.apache.kafka:kafka_2.12:$kafkaVersion")
+    implementation("io.confluent:kafka-avro-serializer:$confluentVersion")
+    implementation("org.apache.avro:avro:$avroVersion")
+    implementation("com.github.navikt:doknotifikasjon-schemas:$doknotifikasjonAvroVersion")
 
     implementation("ch.qos.logback:logback-classic:$logbackVersion")
     implementation("net.logstash.logback:logstash-logback-encoder:$logstashEncoderVersion")
