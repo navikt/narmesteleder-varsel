@@ -17,7 +17,7 @@ data class Environment(
     override val kafkaBootstrapServers: String = getEnvVar("KAFKA_BOOTSTRAP_SERVERS_URL"),
     val narmesteLederLeesahTopic: String = "teamsykmelding.syfo-narmesteleder-leesah",
     val sendtSykmeldingKafkaTopic: String = "syfo-sendt-sykmelding",
-    val doknotifikasjonTopic: String = "teamdokumenthandtering.privat-dok-notifikasjon",
+    val doknotifikasjonTopic: String = "teamdokumenthandtering.privat-dok-notifikasjon-med-kontakt-info",
     val schemaRegistryUrl: String = getEnvVar("KAFKA_SCHEMA_REGISTRY"),
     val kafkaSchemaRegistryUsername: String = getEnvVar("KAFKA_SCHEMA_REGISTRY_USER"),
     val kafkaSchemaRegistryPassword: String = getEnvVar("KAFKA_SCHEMA_REGISTRY_PASSWORD")
