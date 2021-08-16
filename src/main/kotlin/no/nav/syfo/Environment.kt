@@ -18,7 +18,9 @@ data class Environment(
     val narmesteLederLeesahTopic: String = "teamsykmelding.syfo-narmesteleder-leesah",
     val sendtSykmeldingKafkaTopic: String = "syfo-sendt-sykmelding",
     val doknotifikasjonTopic: String = "teamdokumenthandtering.privat-dok-notifikasjon",
-    val schemaRegistryUrl: String = getEnvVar("KAFKA_SCHEMA_REGISTRY")
+    val schemaRegistryUrl: String = getEnvVar("KAFKA_SCHEMA_REGISTRY"),
+    val kafkaSchemaRegistryUsername: String = getEnvVar("KAFKA_SCHEMA_REGISTRY_USER"),
+    val kafkaSchemaRegistryPassword: String = getEnvVar("KAFKA_SCHEMA_REGISTRY_PASSWORD")
 ) : KafkaConfig {
     fun jdbcUrl(): String {
         return "jdbc:postgresql://$dbHost:$dbPort/$dbName"
