@@ -28,17 +28,16 @@ const val EPOST_TEKST = """
 """
 
 fun tilNotifikasjonMedkontaktInfo(bestillingsId: String, narmesteLeder: NarmesteLeder): NotifikasjonMedkontaktInfo {
-    return NotifikasjonMedkontaktInfo(
-        bestillingsId,
-        "narmesteleder-varsel",
-        narmesteLeder.narmesteLederFnr,
-        narmesteLeder.narmesteLederTelefonnummer,
-        narmesteLeder.narmesteLederEpost,
-        0,
-        0,
-        "Sykmeldt arbeidstaker",
-        EPOST_TEKST,
-        SMS_TEKST,
-        listOf(PrefererteKanal.EPOST)
-    )
+    return NotifikasjonMedkontaktInfo.newBuilder()
+        .setBestillingsId(bestillingsId)
+        .setBestillerId("narmesteleder-varsel")
+        .setFodselsnummer(narmesteLeder.narmesteLederFnr)
+        .setMobiltelefonnummer(narmesteLeder.narmesteLederTelefonnummer)
+        .setEpostadresse(narmesteLeder.narmesteLederEpost)
+        .setAntallRenotifikasjoner(0)
+        .setRenotifikasjonIntervall(0)
+        .setTittel("Sykmeldt arbeidstaker")
+        .setEpostTekst(EPOST_TEKST)
+        .setSmsTekst(SMS_TEKST)
+        .setPrefererteKanaler(listOf(PrefererteKanal.EPOST)).build()
 }
