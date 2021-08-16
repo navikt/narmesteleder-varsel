@@ -4,6 +4,9 @@ import io.mockk.clearMocks
 import io.mockk.mockk
 import io.mockk.verify
 import no.nav.syfo.model.sykmeldingstatus.KafkaMetadataDTO
+import no.nav.syfo.model.sykmeldingstatus.ShortNameDTO
+import no.nav.syfo.model.sykmeldingstatus.SporsmalOgSvarDTO
+import no.nav.syfo.model.sykmeldingstatus.SvartypeDTO
 import no.nav.syfo.narmesteleder.db.lagreNarmesteLeder
 import no.nav.syfo.narmesteleder.model.NarmesteLeder
 import no.nav.syfo.sykmeldingvarsel.db.SendtVarsel
@@ -65,7 +68,12 @@ class SendtSykmeldingVarselServiceTest : Spek({
                         fnr = fnrAnsatt,
                         source = "user"
                     ),
-                    SendtEvent(ArbeidsgiverStatus(orgnummer))
+                    SendtEvent(
+                        ArbeidsgiverStatus(orgnummer),
+                        listOf(
+                            SporsmalOgSvarDTO("Be om ny nærmeste leder?", ShortNameDTO.NY_NARMESTE_LEDER, SvartypeDTO.JA_NEI, "NEI")
+                        )
+                    )
                 )
             )
 
@@ -97,7 +105,7 @@ class SendtSykmeldingVarselServiceTest : Spek({
                         fnr = fnrAnsatt,
                         source = "user"
                     ),
-                    SendtEvent(ArbeidsgiverStatus(orgnummer = "999888"))
+                    SendtEvent(ArbeidsgiverStatus(orgnummer = "999888"), emptyList())
                 )
             )
 
@@ -138,7 +146,7 @@ class SendtSykmeldingVarselServiceTest : Spek({
                         fnr = fnrAnsatt,
                         source = "user"
                     ),
-                    SendtEvent(ArbeidsgiverStatus(orgnummer))
+                    SendtEvent(ArbeidsgiverStatus(orgnummer), emptyList())
                 )
             )
 
@@ -154,7 +162,44 @@ class SendtSykmeldingVarselServiceTest : Spek({
                         fnr = fnrAnsatt,
                         source = "user"
                     ),
-                    SendtEvent(ArbeidsgiverStatus(orgnummer))
+                    SendtEvent(ArbeidsgiverStatus(orgnummer), emptyList())
+                )
+            )
+
+            testDb.harSendtVarsel(sykmeldingId, VarselType.SENDT_SYKMELDING) shouldBeEqualTo false
+            verify(exactly = 0) { doknotifikasjonProducer.send(any(), any()) }
+        }
+        it("Sender ikke varsel til nl hvis den sykmeldte har bedt om ny leder") {
+            val sykmeldingId = UUID.randomUUID().toString()
+            val narmesteLederId = UUID.randomUUID()
+            testDb.lagreNarmesteLeder(
+                NarmesteLeder(
+                    narmesteLederId = narmesteLederId,
+                    fnr = fnrAnsatt,
+                    orgnummer = orgnummer,
+                    narmesteLederFnr = fnrLeder,
+                    narmesteLederTelefonnummer = "90909090",
+                    narmesteLederEpost = "epost@nav.no",
+                    aktivFom = LocalDate.now(),
+                    arbeidsgiverForskutterer = true,
+                    timestamp = OffsetDateTime.now(ZoneOffset.UTC)
+                )
+            )
+
+            sendtSykmeldingVarselService.handterSendtSykmelding(
+                SendtSykmelding(
+                    KafkaMetadataDTO(
+                        sykmeldingId = sykmeldingId,
+                        timestamp = OffsetDateTime.now(ZoneOffset.UTC),
+                        fnr = fnrAnsatt,
+                        source = "user"
+                    ),
+                    SendtEvent(
+                        ArbeidsgiverStatus(orgnummer),
+                        listOf(
+                            SporsmalOgSvarDTO("Be om ny nærmeste leder?", ShortNameDTO.NY_NARMESTE_LEDER, SvartypeDTO.JA_NEI, "JA")
+                        )
+                    )
                 )
             )
 
