@@ -7,7 +7,7 @@ import no.nav.syfo.narmesteleder.model.NarmesteLeder
 const val SMS_TEKST = """
 Hei!
 Du har fått tilgang til sykmeldingen til en av dine ansatte.
-Logg inn på DineSykmeldte for å se sykmeldingen. 
+Logg inn på "Min side - arbeidsgiver" og finn sykmeldingen der. 
 Vennlig hilsen NAV
 """
 const val EPOST_TEKST = """
@@ -19,7 +19,7 @@ const val EPOST_TEKST = """
 <body>
 <p>Hei.</p>
 <p>Du har fått tilgang til sykmeldingen til en av dine ansatte fordi du er meldt inn som nærmeste leder med personalansvar.</p>
-<p>Logg inn på DineSykmeldte for å se sykmeldingen.</p>
+<p>Logg inn på "Min side - arbeidsgiver" og finn sykmeldingen der.</p>
 <p>Du må logge inn med BankID eller tilsvarende for at vi skal være sikre på at sykmeldingen kommer fram til rett person.</p>
 <p>Vennlig hilsen</p>
 <p> NAV</p>
