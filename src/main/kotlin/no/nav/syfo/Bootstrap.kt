@@ -61,8 +61,8 @@ fun main() {
         oppdaterNarmesteLederService
     )
 
-    val onPremConsumerProperties = loadBaseConfig(env, vaultSecrets).toConsumerConfig(env.applicationName + "-consumer", JacksonKafkaDeserializer::class).apply {
-        setProperty(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "latest")
+    val onPremConsumerProperties = loadBaseConfig(env, vaultSecrets).toConsumerConfig(env.applicationName + "-consumer-2", JacksonKafkaDeserializer::class).apply {
+        setProperty(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest")
     }
     val onPremKafkaConsumer = KafkaConsumer(
         onPremConsumerProperties,
