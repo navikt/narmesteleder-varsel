@@ -35,9 +35,9 @@ class SendtSykmeldingConsumerService(
     }
 
     fun skalBehandle(cr: ConsumerRecord<String, SendtSykmelding>): Boolean {
-        val partisjonOffset = mapOf(0 to 443, 1 to 433, 2 to 409)
+        val partisjonOffset = mapOf(0 to 6587214, 1 to 6578122, 2 to 6588686)
         if (cr.offset() > partisjonOffset[cr.partition()]!!) {
-            if (cr.value().kafkaMetadata.timestamp.isAfter(OffsetDateTime.of(LocalDate.of(2021, 8, 20).atStartOfDay(), ZoneOffset.UTC))) {
+            if (cr.value().kafkaMetadata.timestamp.isAfter(OffsetDateTime.of(LocalDate.of(2021, 8, 31).atStartOfDay(), ZoneOffset.UTC))) {
                 return true
             }
         }
