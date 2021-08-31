@@ -29,6 +29,7 @@ class TestDB : DatabaseInterface {
 fun Connection.dropData() {
     use { connection ->
         connection.prepareStatement("DELETE FROM narmeste_leder").executeUpdate()
+        connection.prepareStatement("DELETE FROM sendt_varsel").executeUpdate()
         connection.commit()
     }
 }
