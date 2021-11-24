@@ -13,11 +13,15 @@ class NarmesteLederLeesahConsumerService(
     private val oppdaterNarmesteLederService: OppdaterNarmesteLederService
 ) {
 
+    companion object {
+        private const val POLL_DURATION_SECONDS = 10L
+    }
+
     fun startConsumer() {
         kafkaConsumer.subscribe(listOf(topic))
         log.info("Starting consuming topic $topic")
         while (applicationState.ready) {
-            kafkaConsumer.poll(Duration.ZERO).forEach {
+            kafkaConsumer.poll(Duration.ofSeconds(POLL_DURATION_SECONDS)).forEach {
                 try {
                     log.info("Mottatt narmesteleder-oppdatering med id ${it.key()}")
                     oppdaterNarmesteLederService.handterMottattNarmesteLederOppdatering(it.value())
