@@ -16,7 +16,7 @@ spec:
           - name: narmesteleder-varsel
             envVarPrefix: NAIS_DATABASE
   replicas:
-    min: 3
+    min: 1
     max: 3
     cpuThresholdPercentage: 90
   port: 8080
@@ -36,11 +36,11 @@ spec:
     path: /prometheus
   resources:
     limits:
-      cpu: 500m
-      memory: 1Gi
+      cpu: 100m
+      memory: 256Mi
     requests:
-      cpu: 400m
-      memory: 768Mi
+      cpu: 20m
+      memory: 256Mi
   vault:
     enabled: false
   envFrom:
