@@ -60,7 +60,7 @@ fun main() {
     )
 
     val kafkaConsumerSendtSykmelding = KafkaConsumer(
-        KafkaUtils.getAivenKafkaConfig().also { it[ConsumerConfig.AUTO_OFFSET_RESET_CONFIG] = "earliest" }.toConsumerConfig("narmesteleder-varsel", JacksonKafkaDeserializer::class),
+        KafkaUtils.getAivenKafkaConfig().also { it[ConsumerConfig.AUTO_OFFSET_RESET_CONFIG] = "none" }.toConsumerConfig("narmesteleder-varsel", JacksonKafkaDeserializer::class),
         StringDeserializer(),
         JacksonKafkaDeserializer(SendtSykmelding::class)
     )
