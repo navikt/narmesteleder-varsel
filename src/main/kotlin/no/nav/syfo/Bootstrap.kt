@@ -15,7 +15,6 @@ import no.nav.syfo.application.coroutine.Unbounded
 import no.nav.syfo.application.createApplicationEngine
 import no.nav.syfo.application.db.Database
 import no.nav.syfo.kafka.aiven.KafkaUtils
-import no.nav.syfo.kafka.loadBaseConfig
 import no.nav.syfo.kafka.toConsumerConfig
 import no.nav.syfo.kafka.toProducerConfig
 import no.nav.syfo.kafkautils.JacksonKafkaDeserializer
@@ -39,7 +38,6 @@ val log: Logger = LoggerFactory.getLogger("no.nav.syfo.narmesteleder-varsel")
 @KtorExperimentalAPI
 fun main() {
     val env = Environment()
-    val vaultSecrets = VaultSecrets()
     DefaultExports.initialize()
     val applicationState = ApplicationState()
     val database = Database(env)
@@ -61,14 +59,12 @@ fun main() {
         oppdaterNarmesteLederService
     )
 
-    val onPremConsumerProperties = loadBaseConfig(env, vaultSecrets).toConsumerConfig(env.applicationName + "-consumer-2", JacksonKafkaDeserializer::class).apply {
-        setProperty(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "none")
-    }
-    val onPremKafkaConsumer = KafkaConsumer(
-        onPremConsumerProperties,
+    val kafkaConsumerSendtSykmelding = KafkaConsumer(
+        KafkaUtils.getAivenKafkaConfig().also { it[ConsumerConfig.AUTO_OFFSET_RESET_CONFIG] = "earliest" }.toConsumerConfig("narmesteleder-varsel", JacksonKafkaDeserializer::class),
         StringDeserializer(),
         JacksonKafkaDeserializer(SendtSykmelding::class)
     )
+
     val kafkaProducerDoknotifikasjon = KafkaProducer<String, NotifikasjonMedkontaktInfo>(
         KafkaUtils
             .getAivenKafkaConfig().apply {
@@ -80,7 +76,7 @@ fun main() {
     val doknotifikasjonProducer = DoknotifikasjonProducer(kafkaProducerDoknotifikasjon, env.doknotifikasjonTopic)
     val sendtSykmeldingVarselService = SendtSykmeldingVarselService(database, doknotifikasjonProducer)
     val sendtSykmeldingConsumerService = SendtSykmeldingConsumerService(
-        onPremKafkaConsumer,
+        kafkaConsumerSendtSykmelding,
         sendtSykmeldingVarselService,
         env.sendtSykmeldingKafkaTopic,
         applicationState
