@@ -5,25 +5,24 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 group = "no.nav.syfo"
 version = "1.0.0"
 
-val coroutinesVersion = "1.4.2"
-val jacksonVersion = "2.12.0"
-val kluentVersion = "1.61"
-val ktorVersion = "1.5.1"
-val logbackVersion = "1.2.3"
-val logstashEncoderVersion = "6.5"
-val prometheusVersion = "0.9.0"
-val spekVersion = "2.0.14"
-val smCommonVersion = "1.dff6489"
-val mockkVersion = "1.11.0"
-val nimbusdsVersion = "9.2"
-val testContainerKafkaVersion = "1.15.1"
-val postgresVersion = "42.2.5"
-val flywayVersion = "5.2.4"
-val hikariVersion = "3.3.0"
-val postgresEmbeddedVersion = "0.13.3"
-val kafkaVersion = "2.4.0"
-val avroVersion = "1.8.2"
-val confluentVersion = "5.3.0"
+val coroutinesVersion = "1.5.2"
+val jacksonVersion = "2.13.0"
+val kluentVersion = "1.68"
+val ktorVersion = "1.6.7"
+val logbackVersion = "1.2.8"
+val logstashEncoderVersion = "7.0.1"
+val prometheusVersion = "0.12.0"
+val spekVersion = "2.0.17"
+val smCommonVersion = "1.a92720c"
+val mockkVersion = "1.12.1"
+val nimbusdsVersion = "9.15.2"
+val testContainerVersion = "1.16.2"
+val postgresVersion = "42.3.1"
+val flywayVersion = "8.1.0"
+val hikariVersion = "5.0.0"
+val kafkaVersion = "3.0.0"
+val avroVersion = "1.11.0"
+val confluentVersion = "7.0.1"
 val doknotifikasjonAvroVersion = "1.2021.06.22-11.27-265ce1fe1ab4"
 
 tasks.withType<Jar> {
@@ -31,10 +30,10 @@ tasks.withType<Jar> {
 }
 
 plugins {
-    id("org.jmailen.kotlinter") version "3.3.0"
-    kotlin("jvm") version "1.4.21"
-    id("com.diffplug.spotless") version "5.8.2"
-    id("com.github.johnrengelman.shadow") version "6.1.0"
+    id("org.jmailen.kotlinter") version "3.6.0"
+    kotlin("jvm") version "1.6.0"
+    id("com.diffplug.spotless") version "5.16.0"
+    id("com.github.johnrengelman.shadow") version "7.0.0"
     jacoco
 }
 
@@ -55,7 +54,6 @@ repositories {
         }
     }
     mavenCentral()
-    jcenter()
     maven(url = "https://packages.confluent.io/maven/")
     maven(url = "https://jitpack.io")
 }
@@ -96,14 +94,14 @@ dependencies {
     implementation("com.zaxxer:HikariCP:$hikariVersion")
     implementation("org.flywaydb:flyway-core:$flywayVersion")
 
-    testImplementation("org.amshove.kluent:kluent:$kluentVersion") 
+    testImplementation("org.amshove.kluent:kluent:$kluentVersion")
     testImplementation("io.mockk:mockk:$mockkVersion")
     testImplementation("org.spekframework.spek2:spek-dsl-jvm:$spekVersion")
     testImplementation("com.nimbusds:nimbus-jose-jwt:$nimbusdsVersion")
-    testImplementation("org.testcontainers:kafka:$testContainerKafkaVersion")
-    testImplementation("com.opentable.components:otj-pg-embedded:$postgresEmbeddedVersion")
+    testImplementation("org.testcontainers:kafka:$testContainerVersion")
+    testImplementation("org.testcontainers:postgresql:$testContainerVersion")
     testImplementation("io.ktor:ktor-server-test-host:$ktorVersion") {
-        exclude(group = "org.eclipse.jetty") 
+        exclude(group = "org.eclipse.jetty")
     }
     testImplementation("org.spekframework.spek2:spek-dsl-jvm:$spekVersion") {
         exclude(group = "org.jetbrains.kotlin")
@@ -128,7 +126,7 @@ tasks {
     }
 
     withType<KotlinCompile> {
-        kotlinOptions.jvmTarget = "12"
+        kotlinOptions.jvmTarget = "17"
     }
 
     withType<JacocoReport> {

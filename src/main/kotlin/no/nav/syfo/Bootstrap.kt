@@ -2,9 +2,9 @@ package no.nav.syfo
 
 import io.confluent.kafka.serializers.KafkaAvroSerializer
 import io.confluent.kafka.serializers.KafkaAvroSerializerConfig
-import io.ktor.util.KtorExperimentalAPI
 import io.prometheus.client.hotspot.DefaultExports
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -35,7 +35,7 @@ import org.slf4j.LoggerFactory
 
 val log: Logger = LoggerFactory.getLogger("no.nav.syfo.narmesteleder-varsel")
 
-@KtorExperimentalAPI
+@DelicateCoroutinesApi
 fun main() {
     val env = Environment()
     DefaultExports.initialize()
@@ -96,6 +96,7 @@ fun main() {
     }
 }
 
+@DelicateCoroutinesApi
 fun startBackgroundJob(applicationState: ApplicationState, block: suspend CoroutineScope.() -> Unit) {
     GlobalScope.launch(Dispatchers.Unbounded) {
         try {
