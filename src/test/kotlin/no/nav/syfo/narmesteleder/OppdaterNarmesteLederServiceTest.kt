@@ -3,7 +3,6 @@ package no.nav.syfo.narmesteleder
 import no.nav.syfo.narmesteleder.db.getNarmestelederRelasjon
 import no.nav.syfo.narmesteleder.kafka.NarmesteLederLeesah
 import no.nav.syfo.testutils.TestDB
-import no.nav.syfo.testutils.dropData
 import org.amshove.kluent.shouldBeEqualTo
 import org.amshove.kluent.shouldNotBeEqualTo
 import org.spekframework.spek2.Spek
@@ -14,14 +13,11 @@ import java.time.ZoneOffset
 import java.util.UUID
 
 class OppdaterNarmesteLederServiceTest : Spek({
-    val testDb = TestDB()
+    val testDb = TestDB.database
     val oppdaterNarmesteLederService = OppdaterNarmesteLederService(testDb)
 
     afterEachTest {
-        testDb.connection.dropData()
-    }
-    afterGroup {
-        testDb.stop()
+        TestDB.dropData()
     }
     describe("OppdaterNarmesteLederService") {
         it("Oppretter ny nærmeste leder hvis den ikke finnes fra før og er aktiv") {

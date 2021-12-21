@@ -1,35 +1,44 @@
 package no.nav.syfo.testutils
 
-import com.opentable.db.postgres.embedded.EmbeddedPostgres
+import io.mockk.every
+import io.mockk.mockk
+import no.nav.syfo.Environment
+import no.nav.syfo.application.db.Database
 import no.nav.syfo.application.db.DatabaseInterface
-import org.flywaydb.core.Flyway
-import java.sql.Connection
+import org.testcontainers.containers.PostgreSQLContainer
 
-class TestDB : DatabaseInterface {
-    private var pg: EmbeddedPostgres? = null
-    override val connection: Connection
-        get() = pg!!.postgresDatabase.connection.apply { autoCommit = false }
+class PsqlContainer : PostgreSQLContainer<PsqlContainer>("postgres:12")
 
-    init {
-        pg = EmbeddedPostgres.start()
-        pg!!.postgresDatabase.connection.use {
-            connection ->
-            connection.prepareStatement("create role cloudsqliamuser;").executeUpdate()
+class TestDB private constructor() {
+
+    companion object {
+        val database: DatabaseInterface
+        val env = mockk<Environment>()
+        val psqlContainer: PsqlContainer = PsqlContainer()
+            .withExposedPorts(5432)
+            .withUsername("username")
+            .withPassword("password")
+            .withDatabaseName("database")
+            .withInitScript("db/testdb-init.sql")
+
+        init {
+            psqlContainer.start()
+            every { env.databasePassword } returns "password"
+            every { env.databaseUsername } returns "username"
+            every { env.jdbcUrl() } returns psqlContainer.jdbcUrl
+            database = Database(env)
         }
-        Flyway.configure().run {
-            dataSource(pg?.postgresDatabase).load().migrate()
+
+        fun dropData() {
+            database.connection.use { connection ->
+                connection.prepareStatement("DELETE FROM narmeste_leder").executeUpdate()
+                connection.prepareStatement("DELETE FROM sendt_varsel").executeUpdate()
+                connection.commit()
+            }
         }
     }
 
-    fun stop() {
-        pg?.close()
-    }
-}
-
-fun Connection.dropData() {
-    use { connection ->
-        connection.prepareStatement("DELETE FROM narmeste_leder").executeUpdate()
-        connection.prepareStatement("DELETE FROM sendt_varsel").executeUpdate()
-        connection.commit()
-    }
+//        Flyway.configure().run {
+//            dataSource(pg?.postgresDatabase).load().migrate()
+//        }
 }

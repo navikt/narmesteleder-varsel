@@ -17,7 +17,6 @@ import no.nav.syfo.sykmeldingvarsel.kafka.ArbeidsgiverStatus
 import no.nav.syfo.sykmeldingvarsel.kafka.SendtEvent
 import no.nav.syfo.sykmeldingvarsel.kafka.SendtSykmelding
 import no.nav.syfo.testutils.TestDB
-import no.nav.syfo.testutils.dropData
 import org.amshove.kluent.shouldBeEqualTo
 import org.spekframework.spek2.Spek
 import org.spekframework.spek2.style.specification.describe
@@ -27,7 +26,7 @@ import java.time.ZoneOffset
 import java.util.UUID
 
 class SendtSykmeldingVarselServiceTest : Spek({
-    val testDb = TestDB()
+    val testDb = TestDB.database
     val doknotifikasjonProducer = mockk<DoknotifikasjonProducer>(relaxed = true)
     val sendtSykmeldingVarselService = SendtSykmeldingVarselService(testDb, doknotifikasjonProducer)
 
@@ -36,12 +35,10 @@ class SendtSykmeldingVarselServiceTest : Spek({
     val orgnummer = "999000"
 
     afterEachTest {
-        testDb.connection.dropData()
+        TestDB.dropData()
         clearMocks(doknotifikasjonProducer)
     }
-    afterGroup {
-        testDb.stop()
-    }
+
     describe("SendtSykmeldingVarselService") {
         it("Sender varsel til nl hvis nl finnes og varsel ikke er sendt før") {
             val sykmeldingId = UUID.randomUUID().toString()
