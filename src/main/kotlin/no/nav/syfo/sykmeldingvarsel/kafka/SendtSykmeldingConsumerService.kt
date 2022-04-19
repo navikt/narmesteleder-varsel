@@ -19,7 +19,7 @@ class SendtSykmeldingConsumerService(
     fun startConsumer() {
         kafkaConsumer.subscribe(listOf(topic))
         while (applicationState.ready) {
-            kafkaConsumer.poll(Duration.ofSeconds(POLL_DURATION_SECONDS)).forEach {
+            kafkaConsumer.poll(Duration.ofSeconds(POLL_DURATION_SECONDS)).filterNot { it.value() == null }.forEach {
                 try {
                     log.info("Mottatt sendt sykmelding med id ${it.value().kafkaMetadata.sykmeldingId}")
                     sendtSykmeldingVarselService.handterSendtSykmelding(it.value())
