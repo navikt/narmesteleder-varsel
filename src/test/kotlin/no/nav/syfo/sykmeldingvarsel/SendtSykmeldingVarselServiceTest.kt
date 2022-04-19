@@ -1,5 +1,6 @@
 package no.nav.syfo.sykmeldingvarsel
 
+import io.kotest.core.spec.style.FunSpec
 import io.mockk.clearMocks
 import io.mockk.mockk
 import io.mockk.verify
@@ -18,14 +19,12 @@ import no.nav.syfo.sykmeldingvarsel.kafka.SendtEvent
 import no.nav.syfo.sykmeldingvarsel.kafka.SendtSykmelding
 import no.nav.syfo.testutils.TestDB
 import org.amshove.kluent.shouldBeEqualTo
-import org.spekframework.spek2.Spek
-import org.spekframework.spek2.style.specification.describe
 import java.time.LocalDate
 import java.time.OffsetDateTime
 import java.time.ZoneOffset
 import java.util.UUID
 
-class SendtSykmeldingVarselServiceTest : Spek({
+class SendtSykmeldingVarselServiceTest : FunSpec({
     val testDb = TestDB.database
     val doknotifikasjonProducer = mockk<DoknotifikasjonProducer>(relaxed = true)
     val sendtSykmeldingVarselService = SendtSykmeldingVarselService(testDb, doknotifikasjonProducer)
@@ -34,13 +33,13 @@ class SendtSykmeldingVarselServiceTest : Spek({
     val fnrLeder = "01987654321"
     val orgnummer = "999000"
 
-    afterEachTest {
+    afterTest {
         TestDB.dropData()
         clearMocks(doknotifikasjonProducer)
     }
 
-    describe("SendtSykmeldingVarselService") {
-        it("Sender varsel til nl hvis nl finnes og varsel ikke er sendt før") {
+    context("SendtSykmeldingVarselService") {
+        test("Sender varsel til nl hvis nl finnes og varsel ikke er sendt før") {
             val sykmeldingId = UUID.randomUUID().toString()
             val narmesteLederId = UUID.randomUUID()
             testDb.lagreNarmesteLeder(
@@ -77,7 +76,7 @@ class SendtSykmeldingVarselServiceTest : Spek({
             testDb.harSendtVarsel(sykmeldingId, VarselType.SENDT_SYKMELDING) shouldBeEqualTo true
             verify { doknotifikasjonProducer.send(any(), any()) }
         }
-        it("Sender ikke varsel hvis nl gjelder annet arbeidsforhold") {
+        test("Sender ikke varsel hvis nl gjelder annet arbeidsforhold") {
             val sykmeldingId = UUID.randomUUID().toString()
             val narmesteLederId = UUID.randomUUID()
             testDb.lagreNarmesteLeder(
@@ -109,7 +108,7 @@ class SendtSykmeldingVarselServiceTest : Spek({
             testDb.harSendtVarsel(sykmeldingId, VarselType.SENDT_SYKMELDING) shouldBeEqualTo false
             verify(exactly = 0) { doknotifikasjonProducer.send(any(), any()) }
         }
-        it("Sender ikke varsel til nl hvis varsel er sendt tidligere") {
+        test("Sender ikke varsel til nl hvis varsel er sendt tidligere") {
             val sykmeldingId = UUID.randomUUID().toString()
             val narmesteLederId = UUID.randomUUID()
             testDb.lagreNarmesteLeder(
@@ -149,7 +148,7 @@ class SendtSykmeldingVarselServiceTest : Spek({
 
             verify(exactly = 0) { doknotifikasjonProducer.send(any(), any()) }
         }
-        it("Sender ikke varsel til nl hvis nl ikke finnes") {
+        test("Sender ikke varsel til nl hvis nl ikke finnes") {
             val sykmeldingId = UUID.randomUUID().toString()
             sendtSykmeldingVarselService.handterSendtSykmelding(
                 SendtSykmelding(
@@ -166,7 +165,7 @@ class SendtSykmeldingVarselServiceTest : Spek({
             testDb.harSendtVarsel(sykmeldingId, VarselType.SENDT_SYKMELDING) shouldBeEqualTo false
             verify(exactly = 0) { doknotifikasjonProducer.send(any(), any()) }
         }
-        it("Sender ikke varsel til nl hvis den sykmeldte har bedt om ny leder") {
+        test("Sender ikke varsel til nl hvis den sykmeldte har bedt om ny leder") {
             val sykmeldingId = UUID.randomUUID().toString()
             val narmesteLederId = UUID.randomUUID()
             testDb.lagreNarmesteLeder(

@@ -1,40 +1,39 @@
 package no.nav.syfo.narmesteleder
 
+import io.kotest.core.spec.style.FunSpec
 import no.nav.syfo.narmesteleder.db.getNarmestelederRelasjon
 import no.nav.syfo.narmesteleder.kafka.NarmesteLederLeesah
 import no.nav.syfo.testutils.TestDB
 import org.amshove.kluent.shouldBeEqualTo
 import org.amshove.kluent.shouldNotBeEqualTo
-import org.spekframework.spek2.Spek
-import org.spekframework.spek2.style.specification.describe
 import java.time.LocalDate
 import java.time.OffsetDateTime
 import java.time.ZoneOffset
 import java.util.UUID
 
-class OppdaterNarmesteLederServiceTest : Spek({
+class OppdaterNarmesteLederServiceTest : FunSpec({
     val testDb = TestDB.database
     val oppdaterNarmesteLederService = OppdaterNarmesteLederService(testDb)
 
-    afterEachTest {
+    afterTest {
         TestDB.dropData()
     }
-    describe("OppdaterNarmesteLederService") {
-        it("Oppretter ny nærmeste leder hvis den ikke finnes fra før og er aktiv") {
+    context("OppdaterNarmesteLederService") {
+        test("Oppretter ny nærmeste leder hvis den ikke finnes fra før og er aktiv") {
             val narmesteLederId = UUID.randomUUID()
             oppdaterNarmesteLederService.handterMottattNarmesteLederOppdatering(getNarmesteLederLeesah(narmesteLederId))
 
             val narmesteLeder = testDb.getNarmestelederRelasjon(narmesteLederId)
             narmesteLeder shouldNotBeEqualTo null
         }
-        it("Ignorerer melding om ny nærmeste leder hvis den ikke finnes fra før og er inaktiv") {
+        test("Ignorerer melding om ny nærmeste leder hvis den ikke finnes fra før og er inaktiv") {
             val narmesteLederId = UUID.randomUUID()
             oppdaterNarmesteLederService.handterMottattNarmesteLederOppdatering(getNarmesteLederLeesah(narmesteLederId, aktivTom = LocalDate.now()))
 
             val narmesteLeder = testDb.getNarmestelederRelasjon(narmesteLederId)
             narmesteLeder shouldBeEqualTo null
         }
-        it("Oppdaterer nærmeste leder hvis den finnes fra før og er aktiv") {
+        test("Oppdaterer nærmeste leder hvis den finnes fra før og er aktiv") {
             val narmesteLederId = UUID.randomUUID()
             oppdaterNarmesteLederService.handterMottattNarmesteLederOppdatering(getNarmesteLederLeesah(narmesteLederId))
             oppdaterNarmesteLederService.handterMottattNarmesteLederOppdatering(getNarmesteLederLeesah(narmesteLederId, telefonnummer = "98989898", epost = "mail@banken.no"))
@@ -44,7 +43,7 @@ class OppdaterNarmesteLederServiceTest : Spek({
             narmesteLeder?.narmesteLederTelefonnummer shouldBeEqualTo "98989898"
             narmesteLeder?.narmesteLederEpost shouldBeEqualTo "mail@banken.no"
         }
-        it("Sletter nærmeste leder hvis den finnes fra før og er inaktiv") {
+        test("Sletter nærmeste leder hvis den finnes fra før og er inaktiv") {
             val narmesteLederId = UUID.randomUUID()
             oppdaterNarmesteLederService.handterMottattNarmesteLederOppdatering(getNarmesteLederLeesah(narmesteLederId))
             oppdaterNarmesteLederService.handterMottattNarmesteLederOppdatering(getNarmesteLederLeesah(narmesteLederId, aktivTom = LocalDate.now()))
