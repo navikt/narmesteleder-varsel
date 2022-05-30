@@ -83,8 +83,6 @@ fun main() {
     )
 
     val applicationServer = ApplicationServer(applicationEngine, applicationState)
-    applicationServer.start()
-    applicationState.ready = true
 
     startBackgroundJob(applicationState) {
         log.info("Starting narmesteleder leesah consumer")
@@ -94,6 +92,7 @@ fun main() {
         log.info("Starting sendt sykmelding consumer")
         sendtSykmeldingConsumerService.startConsumer()
     }
+    applicationServer.start()
 }
 
 @DelicateCoroutinesApi
