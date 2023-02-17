@@ -6,14 +6,14 @@ group = "no.nav.syfo"
 version = "1.0.0"
 
 val coroutinesVersion = "1.6.4"
-val jacksonVersion = "2.14.1"
+val jacksonVersion = "2.14.2"
 val kluentVersion = "1.72"
-val ktorVersion = "2.2.2"
+val ktorVersion = "2.2.3"
 val logbackVersion = "1.4.5"
 val logstashEncoderVersion = "7.2"
 val prometheusVersion = "0.16.0"
 val kotestVersion = "5.5.4"
-val smCommonVersion = "1.d6548c5"
+val smCommonVersion = "1.fbf33a9"
 val mockkVersion = "1.13.2"
 val nimbusdsVersion = "9.25.6"
 val testContainerVersion = "1.17.6"
@@ -24,7 +24,7 @@ val kafkaVersion = "3.3.1"
 val avroVersion = "1.11.0"
 val confluentVersion = "7.0.1"
 val doknotifikasjonAvroVersion = "1.2021.06.22-11.27-265ce1fe1ab4"
-val kotlinVersion = "1.8.0"
+val kotlinVersion = "1.8.10"
 
 tasks.withType<Jar> {
     manifest.attributes["Main-Class"] = "no.nav.syfo.BootstrapKt"
@@ -32,7 +32,7 @@ tasks.withType<Jar> {
 
 plugins {
     id("org.jmailen.kotlinter") version "3.12.0"
-    kotlin("jvm") version "1.8.0"
+    kotlin("jvm") version "1.8.10"
     id("com.diffplug.spotless") version "6.11.0"
     id("com.github.johnrengelman.shadow") version "7.1.2"
 }
