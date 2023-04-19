@@ -24,7 +24,7 @@ val kafkaVersion = "3.3.1"
 val avroVersion = "1.11.0"
 val confluentVersion = "7.0.1"
 val doknotifikasjonAvroVersion = "1.2021.06.22-11.27-265ce1fe1ab4"
-val kotlinVersion = "1.8.10"
+val kotlinVersion = "1.8.20"
 
 tasks.withType<Jar> {
     manifest.attributes["Main-Class"] = "no.nav.syfo.BootstrapKt"
