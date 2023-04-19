@@ -22,7 +22,7 @@ val flywayVersion = "9.16.3"
 val hikariVersion = "5.0.1"
 val kafkaVersion = "3.3.1"
 val avroVersion = "1.11.1"
-val confluentVersion = "7.0.1"
+val confluentVersion = "7.3.3"
 val doknotifikasjonAvroVersion = "1.2021.06.22-11.27-265ce1fe1ab4"
 val kotlinVersion = "1.8.20"
 
