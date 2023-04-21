@@ -13,7 +13,7 @@ data class Environment(
     val doknotifikasjonTopic: String = "teamdokumenthandtering.privat-dok-notifikasjon-med-kontakt-info",
     val schemaRegistryUrl: String = getEnvVar("KAFKA_SCHEMA_REGISTRY"),
     val kafkaSchemaRegistryUsername: String = getEnvVar("KAFKA_SCHEMA_REGISTRY_USER"),
-    val kafkaSchemaRegistryPassword: String = getEnvVar("KAFKA_SCHEMA_REGISTRY_PASSWORD")
+    val kafkaSchemaRegistryPassword: String = getEnvVar("KAFKA_SCHEMA_REGISTRY_PASSWORD"),
 ) {
     fun jdbcUrl(): String {
         return "jdbc:postgresql://$dbHost:$dbPort/$dbName"

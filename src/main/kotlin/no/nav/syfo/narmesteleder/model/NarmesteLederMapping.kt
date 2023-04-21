@@ -12,5 +12,5 @@ fun NarmesteLederLeesah.toNarmesteLeder(): NarmesteLeder =
         narmesteLederEpost = narmesteLederEpost,
         aktivFom = aktivFom,
         arbeidsgiverForskutterer = arbeidsgiverForskutterer,
-        timestamp = timestamp
+        timestamp = timestamp,
     )

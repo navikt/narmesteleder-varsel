@@ -5,14 +5,14 @@ import no.nav.syfo.model.sykmeldingstatus.SporsmalOgSvarDTO
 
 data class SendtSykmelding(
     val kafkaMetadata: KafkaMetadataDTO,
-    val event: SendtEvent
+    val event: SendtEvent,
 )
 
 data class SendtEvent(
     val arbeidsgiver: ArbeidsgiverStatus,
-    val sporsmals: List<SporsmalOgSvarDTO>?
+    val sporsmals: List<SporsmalOgSvarDTO>?,
 )
 
 data class ArbeidsgiverStatus(
-    val orgnummer: String
+    val orgnummer: String,
 )

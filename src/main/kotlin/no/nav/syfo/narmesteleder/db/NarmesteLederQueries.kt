@@ -14,7 +14,7 @@ fun DatabaseInterface.getNarmestelederRelasjon(narmestelederId: UUID): NarmesteL
         connection.prepareStatement(
             """
             select * from narmeste_leder where narmeste_leder_id = ?;
-            """
+            """,
         ).use { ps ->
             ps.setObject(1, narmestelederId)
             ps.executeQuery().toSingleNarmesteLeder()
@@ -55,7 +55,7 @@ fun DatabaseInterface.finnNarmestelederForSykmeldt(fnr: String, orgnummer: Strin
         connection.prepareStatement(
             """
            SELECT * from narmeste_leder where bruker_fnr = ? and orgnummer = ?;
-        """
+        """,
         ).use {
             it.setString(1, fnr)
             it.setString(2, orgnummer)
@@ -78,7 +78,7 @@ private fun Connection.lagreNarmesteleder(narmesteLeder: NarmesteLeder) {
                     aktiv_fom,
                     timestamp)
                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);
-                 """
+                 """,
     ).use {
         it.setObject(1, narmesteLeder.narmesteLederId)
         it.setString(2, narmesteLeder.orgnummer)
@@ -98,7 +98,7 @@ private fun Connection.slettNarmesteLeder(narmesteLederId: UUID) =
         """
             DELETE FROM narmeste_leder 
                 WHERE narmeste_leder_id = ?;
-            """
+            """,
     ).use {
         it.setObject(1, narmesteLederId)
         it.execute()
@@ -110,7 +110,7 @@ private fun Connection.oppdaterNarmesteLeder(narmesteLeder: NarmesteLeder) =
             UPDATE narmeste_leder 
                 SET narmeste_leder_telefonnummer = ?, narmeste_leder_epost = ?, arbeidsgiver_forskutterer = ?, timestamp = ?
                 WHERE narmeste_leder_id = ?;
-            """
+            """,
     ).use {
         it.setString(1, narmesteLeder.narmesteLederTelefonnummer)
         it.setString(2, narmesteLeder.narmesteLederEpost)
@@ -130,5 +130,5 @@ private fun ResultSet.toNarmesteLeder(): NarmesteLeder =
         narmesteLederEpost = getString("narmeste_leder_epost"),
         aktivFom = getTimestamp("aktiv_fom").toInstant().atOffset(ZoneOffset.UTC).toLocalDate(),
         arbeidsgiverForskutterer = getObject("arbeidsgiver_forskutterer")?.toString()?.toBoolean(),
-        timestamp = getTimestamp("timestamp").toInstant().atOffset(ZoneOffset.UTC)
+        timestamp = getTimestamp("timestamp").toInstant().atOffset(ZoneOffset.UTC),
     )

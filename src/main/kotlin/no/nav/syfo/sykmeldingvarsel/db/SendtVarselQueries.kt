@@ -10,7 +10,7 @@ fun DatabaseInterface.harSendtVarsel(sykmeldingId: String, varselType: VarselTyp
         connection.prepareStatement(
             """
             select * from sendt_varsel where sykmelding_id = ? and varseltype = ?;
-            """
+            """,
         ).use { ps ->
             ps.setString(1, sykmeldingId)
             ps.setString(2, varselType.name)
@@ -36,7 +36,7 @@ private fun Connection.lagreSendtVarsel(sendtVarsel: SendtVarsel) {
                     varseltype,
                     timestamp)
                 VALUES (?, ?, ?, ?, ?);
-                 """
+                 """,
     ).use {
         it.setString(1, sendtVarsel.sykmeldingId)
         it.setObject(2, sendtVarsel.narmesteLederId)

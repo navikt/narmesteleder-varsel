@@ -10,7 +10,7 @@ class NarmesteLederLeesahConsumerService(
     private val kafkaConsumer: KafkaConsumer<String, NarmesteLederLeesah>,
     private val applicationState: ApplicationState,
     private val topic: String,
-    private val oppdaterNarmesteLederService: OppdaterNarmesteLederService
+    private val oppdaterNarmesteLederService: OppdaterNarmesteLederService,
 ) {
 
     companion object {

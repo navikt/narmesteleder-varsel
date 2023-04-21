@@ -9,5 +9,5 @@ data class SendtVarsel(
     val narmesteLederId: UUID,
     val bestillingId: UUID,
     val varselType: VarselType,
-    val timestamp: OffsetDateTime
+    val timestamp: OffsetDateTime,
 )

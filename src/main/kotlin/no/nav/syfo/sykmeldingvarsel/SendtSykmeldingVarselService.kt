@@ -17,7 +17,7 @@ import java.util.UUID
 
 class SendtSykmeldingVarselService(
     private val database: DatabaseInterface,
-    private val doknotifikasjonProducer: DoknotifikasjonProducer
+    private val doknotifikasjonProducer: DoknotifikasjonProducer,
 ) {
     fun handterSendtSykmelding(sendtSykmelding: SendtSykmelding) {
         val nlSporsmal = sendtSykmelding.event.sporsmals?.find { it.shortName == ShortNameDTO.NY_NARMESTE_LEDER }
@@ -43,8 +43,8 @@ class SendtSykmeldingVarselService(
                         narmesteLederId = narmesteLeder.narmesteLederId,
                         bestillingId = bestillingId,
                         varselType = VarselType.SENDT_SYKMELDING,
-                        timestamp = OffsetDateTime.now(ZoneOffset.UTC)
-                    )
+                        timestamp = OffsetDateTime.now(ZoneOffset.UTC),
+                    ),
                 )
                 SENDT_SYKMELDING_VARSEL_COUNTER.inc()
                 log.info("Har sendt varsel om sendt sykmelding med id ${sendtSykmelding.kafkaMetadata.sykmeldingId}, bestillingId $bestillingId")

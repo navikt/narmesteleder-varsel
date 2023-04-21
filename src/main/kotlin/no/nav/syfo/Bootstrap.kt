@@ -44,25 +44,25 @@ fun main() {
 
     val applicationEngine = createApplicationEngine(
         env,
-        applicationState
+        applicationState,
     )
     val oppdaterNarmesteLederService = OppdaterNarmesteLederService(database)
     val kafkaConsumer = KafkaConsumer(
         KafkaUtils.getAivenKafkaConfig().also { it[ConsumerConfig.AUTO_OFFSET_RESET_CONFIG] = "none" }.toConsumerConfig("narmesteleder-varsel", JacksonKafkaDeserializer::class),
         StringDeserializer(),
-        JacksonKafkaDeserializer(NarmesteLederLeesah::class)
+        JacksonKafkaDeserializer(NarmesteLederLeesah::class),
     )
     val narmesteLederLeesahConsumerService = NarmesteLederLeesahConsumerService(
         kafkaConsumer,
         applicationState,
         env.narmesteLederLeesahTopic,
-        oppdaterNarmesteLederService
+        oppdaterNarmesteLederService,
     )
 
     val kafkaConsumerSendtSykmelding = KafkaConsumer(
         KafkaUtils.getAivenKafkaConfig().also { it[ConsumerConfig.AUTO_OFFSET_RESET_CONFIG] = "none" }.toConsumerConfig("narmesteleder-varsel", JacksonKafkaDeserializer::class),
         StringDeserializer(),
-        JacksonKafkaDeserializer(SendtSykmelding::class)
+        JacksonKafkaDeserializer(SendtSykmelding::class),
     )
 
     val kafkaProducerDoknotifikasjon = KafkaProducer<String, NotifikasjonMedkontaktInfo>(
@@ -71,7 +71,7 @@ fun main() {
                 setProperty(KafkaAvroSerializerConfig.SCHEMA_REGISTRY_URL_CONFIG, env.schemaRegistryUrl)
                 setProperty(KafkaAvroSerializerConfig.USER_INFO_CONFIG, "${env.kafkaSchemaRegistryUsername}:${env.kafkaSchemaRegistryPassword}")
                 setProperty(KafkaAvroSerializerConfig.BASIC_AUTH_CREDENTIALS_SOURCE, "USER_INFO")
-            }.toProducerConfig("${env.applicationName}-producer", valueSerializer = KafkaAvroSerializer::class, keySerializer = StringSerializer::class)
+            }.toProducerConfig("${env.applicationName}-producer", valueSerializer = KafkaAvroSerializer::class, keySerializer = StringSerializer::class),
     )
     val doknotifikasjonProducer = DoknotifikasjonProducer(kafkaProducerDoknotifikasjon, env.doknotifikasjonTopic)
     val sendtSykmeldingVarselService = SendtSykmeldingVarselService(database, doknotifikasjonProducer)
@@ -79,7 +79,7 @@ fun main() {
         kafkaConsumerSendtSykmelding,
         sendtSykmeldingVarselService,
         env.sendtSykmeldingKafkaTopic,
-        applicationState
+        applicationState,
     )
 
     val applicationServer = ApplicationServer(applicationEngine, applicationState)

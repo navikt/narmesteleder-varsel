@@ -58,7 +58,7 @@ fun getNarmesteLederLeesah(
     narmesteLederId: UUID,
     telefonnummer: String = "90909090",
     epost: String = "test@nav.no",
-    aktivTom: LocalDate? = null
+    aktivTom: LocalDate? = null,
 ): NarmesteLederLeesah =
     NarmesteLederLeesah(
         narmesteLederId = narmesteLederId,
@@ -70,5 +70,5 @@ fun getNarmesteLederLeesah(
         aktivFom = LocalDate.now(),
         aktivTom = aktivTom,
         arbeidsgiverForskutterer = true,
-        timestamp = OffsetDateTime.now(ZoneOffset.UTC)
+        timestamp = OffsetDateTime.now(ZoneOffset.UTC),
     )

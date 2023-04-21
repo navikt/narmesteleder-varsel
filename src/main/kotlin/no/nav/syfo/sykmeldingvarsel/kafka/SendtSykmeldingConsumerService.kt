@@ -10,7 +10,7 @@ class SendtSykmeldingConsumerService(
     private val kafkaConsumer: KafkaConsumer<String, SendtSykmelding>,
     private val sendtSykmeldingVarselService: SendtSykmeldingVarselService,
     private val topic: String,
-    private val applicationState: ApplicationState
+    private val applicationState: ApplicationState,
 ) {
     companion object {
         private const val POLL_DURATION_SECONDS = 10L

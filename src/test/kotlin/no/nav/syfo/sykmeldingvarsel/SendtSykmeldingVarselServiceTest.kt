@@ -52,8 +52,8 @@ class SendtSykmeldingVarselServiceTest : FunSpec({
                     narmesteLederEpost = "epost@nav.no",
                     aktivFom = LocalDate.now(),
                     arbeidsgiverForskutterer = true,
-                    timestamp = OffsetDateTime.now(ZoneOffset.UTC)
-                )
+                    timestamp = OffsetDateTime.now(ZoneOffset.UTC),
+                ),
             )
 
             sendtSykmeldingVarselService.handterSendtSykmelding(
@@ -62,15 +62,15 @@ class SendtSykmeldingVarselServiceTest : FunSpec({
                         sykmeldingId = sykmeldingId,
                         timestamp = OffsetDateTime.now(ZoneOffset.UTC),
                         fnr = fnrAnsatt,
-                        source = "user"
+                        source = "user",
                     ),
                     SendtEvent(
                         ArbeidsgiverStatus(orgnummer),
                         listOf(
-                            SporsmalOgSvarDTO("Be om ny nærmeste leder?", ShortNameDTO.NY_NARMESTE_LEDER, SvartypeDTO.JA_NEI, "NEI")
-                        )
-                    )
-                )
+                            SporsmalOgSvarDTO("Be om ny nærmeste leder?", ShortNameDTO.NY_NARMESTE_LEDER, SvartypeDTO.JA_NEI, "NEI"),
+                        ),
+                    ),
+                ),
             )
 
             testDb.harSendtVarsel(sykmeldingId, VarselType.SENDT_SYKMELDING) shouldBeEqualTo true
@@ -89,8 +89,8 @@ class SendtSykmeldingVarselServiceTest : FunSpec({
                     narmesteLederEpost = "epost@nav.no",
                     aktivFom = LocalDate.now(),
                     arbeidsgiverForskutterer = true,
-                    timestamp = OffsetDateTime.now(ZoneOffset.UTC)
-                )
+                    timestamp = OffsetDateTime.now(ZoneOffset.UTC),
+                ),
             )
 
             sendtSykmeldingVarselService.handterSendtSykmelding(
@@ -99,10 +99,10 @@ class SendtSykmeldingVarselServiceTest : FunSpec({
                         sykmeldingId = sykmeldingId,
                         timestamp = OffsetDateTime.now(ZoneOffset.UTC),
                         fnr = fnrAnsatt,
-                        source = "user"
+                        source = "user",
                     ),
-                    SendtEvent(ArbeidsgiverStatus(orgnummer = "999888"), emptyList())
-                )
+                    SendtEvent(ArbeidsgiverStatus(orgnummer = "999888"), emptyList()),
+                ),
             )
 
             testDb.harSendtVarsel(sykmeldingId, VarselType.SENDT_SYKMELDING) shouldBeEqualTo false
@@ -121,8 +121,8 @@ class SendtSykmeldingVarselServiceTest : FunSpec({
                     narmesteLederEpost = "epost@nav.no",
                     aktivFom = LocalDate.now(),
                     arbeidsgiverForskutterer = true,
-                    timestamp = OffsetDateTime.now(ZoneOffset.UTC)
-                )
+                    timestamp = OffsetDateTime.now(ZoneOffset.UTC),
+                ),
             )
             testDb.lagreSendtVarsel(
                 SendtVarsel(
@@ -130,8 +130,8 @@ class SendtSykmeldingVarselServiceTest : FunSpec({
                     narmesteLederId = narmesteLederId,
                     bestillingId = UUID.randomUUID(),
                     varselType = VarselType.SENDT_SYKMELDING,
-                    timestamp = OffsetDateTime.now(ZoneOffset.UTC)
-                )
+                    timestamp = OffsetDateTime.now(ZoneOffset.UTC),
+                ),
             )
 
             sendtSykmeldingVarselService.handterSendtSykmelding(
@@ -140,10 +140,10 @@ class SendtSykmeldingVarselServiceTest : FunSpec({
                         sykmeldingId = sykmeldingId,
                         timestamp = OffsetDateTime.now(ZoneOffset.UTC),
                         fnr = fnrAnsatt,
-                        source = "user"
+                        source = "user",
                     ),
-                    SendtEvent(ArbeidsgiverStatus(orgnummer), emptyList())
-                )
+                    SendtEvent(ArbeidsgiverStatus(orgnummer), emptyList()),
+                ),
             )
 
             verify(exactly = 0) { doknotifikasjonProducer.send(any(), any()) }
@@ -156,10 +156,10 @@ class SendtSykmeldingVarselServiceTest : FunSpec({
                         sykmeldingId = sykmeldingId,
                         timestamp = OffsetDateTime.now(ZoneOffset.UTC),
                         fnr = fnrAnsatt,
-                        source = "user"
+                        source = "user",
                     ),
-                    SendtEvent(ArbeidsgiverStatus(orgnummer), emptyList())
-                )
+                    SendtEvent(ArbeidsgiverStatus(orgnummer), emptyList()),
+                ),
             )
 
             testDb.harSendtVarsel(sykmeldingId, VarselType.SENDT_SYKMELDING) shouldBeEqualTo false
@@ -178,8 +178,8 @@ class SendtSykmeldingVarselServiceTest : FunSpec({
                     narmesteLederEpost = "epost@nav.no",
                     aktivFom = LocalDate.now(),
                     arbeidsgiverForskutterer = true,
-                    timestamp = OffsetDateTime.now(ZoneOffset.UTC)
-                )
+                    timestamp = OffsetDateTime.now(ZoneOffset.UTC),
+                ),
             )
 
             sendtSykmeldingVarselService.handterSendtSykmelding(
@@ -188,15 +188,15 @@ class SendtSykmeldingVarselServiceTest : FunSpec({
                         sykmeldingId = sykmeldingId,
                         timestamp = OffsetDateTime.now(ZoneOffset.UTC),
                         fnr = fnrAnsatt,
-                        source = "user"
+                        source = "user",
                     ),
                     SendtEvent(
                         ArbeidsgiverStatus(orgnummer),
                         listOf(
-                            SporsmalOgSvarDTO("Be om ny nærmeste leder?", ShortNameDTO.NY_NARMESTE_LEDER, SvartypeDTO.JA_NEI, "JA")
-                        )
-                    )
-                )
+                            SporsmalOgSvarDTO("Be om ny nærmeste leder?", ShortNameDTO.NY_NARMESTE_LEDER, SvartypeDTO.JA_NEI, "JA"),
+                        ),
+                    ),
+                ),
             )
 
             testDb.harSendtVarsel(sykmeldingId, VarselType.SENDT_SYKMELDING) shouldBeEqualTo false
