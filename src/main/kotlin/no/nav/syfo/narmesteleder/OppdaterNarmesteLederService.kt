@@ -28,7 +28,9 @@ class OppdaterNarmesteLederService(
                 database.lagreNarmesteLeder(narmesteLederLeesah.toNarmesteLeder())
                 log.info("Lagret narmesteleder med id ${narmesteLederLeesah.narmesteLederId}")
             } else {
-                log.info("Ignorerer ny inaktiv narmesteleder med id ${narmesteLederLeesah.narmesteLederId}")
+                log.info(
+                    "Ignorerer ny inaktiv narmesteleder med id ${narmesteLederLeesah.narmesteLederId}"
+                )
             }
         }
     }

@@ -14,12 +14,13 @@ class TestDB private constructor() {
     companion object {
         val database: DatabaseInterface
         val env = mockk<Environment>()
-        val psqlContainer: PsqlContainer = PsqlContainer()
-            .withExposedPorts(5432)
-            .withUsername("username")
-            .withPassword("password")
-            .withDatabaseName("database")
-            .withInitScript("db/testdb-init.sql")
+        val psqlContainer: PsqlContainer =
+            PsqlContainer()
+                .withExposedPorts(5432)
+                .withUsername("username")
+                .withPassword("password")
+                .withDatabaseName("database")
+                .withInitScript("db/testdb-init.sql")
 
         init {
             psqlContainer.start()
@@ -38,7 +39,7 @@ class TestDB private constructor() {
         }
     }
 
-//        Flyway.configure().run {
-//            dataSource(pg?.postgresDatabase).load().migrate()
-//        }
+    //        Flyway.configure().run {
+    //            dataSource(pg?.postgresDatabase).load().migrate()
+    //        }
 }

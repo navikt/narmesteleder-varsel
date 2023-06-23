@@ -10,7 +10,8 @@ data class Environment(
     val dbName: String = getEnvVar("NAIS_DATABASE_DATABASE"),
     val narmesteLederLeesahTopic: String = "teamsykmelding.syfo-narmesteleder-leesah",
     val sendtSykmeldingKafkaTopic: String = "teamsykmelding.syfo-sendt-sykmelding",
-    val doknotifikasjonTopic: String = "teamdokumenthandtering.privat-dok-notifikasjon-med-kontakt-info",
+    val doknotifikasjonTopic: String =
+        "teamdokumenthandtering.privat-dok-notifikasjon-med-kontakt-info",
     val schemaRegistryUrl: String = getEnvVar("KAFKA_SCHEMA_REGISTRY"),
     val kafkaSchemaRegistryUsername: String = getEnvVar("KAFKA_SCHEMA_REGISTRY_USER"),
     val kafkaSchemaRegistryPassword: String = getEnvVar("KAFKA_SCHEMA_REGISTRY_PASSWORD"),
@@ -21,4 +22,5 @@ data class Environment(
 }
 
 fun getEnvVar(varName: String, defaultValue: String? = null) =
-    System.getenv(varName) ?: defaultValue ?: throw RuntimeException("Missing required variable \"$varName\"")
+    System.getenv(varName)
+        ?: defaultValue ?: throw RuntimeException("Missing required variable \"$varName\"")

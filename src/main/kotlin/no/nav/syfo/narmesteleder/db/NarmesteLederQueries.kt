@@ -1,24 +1,26 @@
 package no.nav.syfo.narmesteleder.db
 
-import no.nav.syfo.application.db.DatabaseInterface
-import no.nav.syfo.application.db.toList
-import no.nav.syfo.narmesteleder.model.NarmesteLeder
 import java.sql.Connection
 import java.sql.ResultSet
 import java.sql.Timestamp
 import java.time.ZoneOffset
 import java.util.UUID
+import no.nav.syfo.application.db.DatabaseInterface
+import no.nav.syfo.application.db.toList
+import no.nav.syfo.narmesteleder.model.NarmesteLeder
 
 fun DatabaseInterface.getNarmestelederRelasjon(narmestelederId: UUID): NarmesteLeder? {
     return connection.use { connection ->
-        connection.prepareStatement(
-            """
+        connection
+            .prepareStatement(
+                """
             select * from narmeste_leder where narmeste_leder_id = ?;
             """,
-        ).use { ps ->
-            ps.setObject(1, narmestelederId)
-            ps.executeQuery().toSingleNarmesteLeder()
-        }
+            )
+            .use { ps ->
+                ps.setObject(1, narmestelederId)
+                ps.executeQuery().toSingleNarmesteLeder()
+            }
     }
 }
 
@@ -52,21 +54,23 @@ fun DatabaseInterface.lagreNarmesteLeder(narmesteLeder: NarmesteLeder) {
 
 fun DatabaseInterface.finnNarmestelederForSykmeldt(fnr: String, orgnummer: String): NarmesteLeder? {
     return connection.use { connection ->
-        connection.prepareStatement(
-            """
+        connection
+            .prepareStatement(
+                """
            SELECT * from narmeste_leder where bruker_fnr = ? and orgnummer = ?;
         """,
-        ).use {
-            it.setString(1, fnr)
-            it.setString(2, orgnummer)
-            it.executeQuery().toList { toNarmesteLeder() }.firstOrNull()
-        }
+            )
+            .use {
+                it.setString(1, fnr)
+                it.setString(2, orgnummer)
+                it.executeQuery().toList { toNarmesteLeder() }.firstOrNull()
+            }
     }
 }
 
 private fun Connection.lagreNarmesteleder(narmesteLeder: NarmesteLeder) {
     this.prepareStatement(
-        """
+            """
                 INSERT INTO narmeste_leder(
                     narmeste_leder_id,
                     orgnummer,
@@ -79,46 +83,49 @@ private fun Connection.lagreNarmesteleder(narmesteLeder: NarmesteLeder) {
                     timestamp)
                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);
                  """,
-    ).use {
-        it.setObject(1, narmesteLeder.narmesteLederId)
-        it.setString(2, narmesteLeder.orgnummer)
-        it.setString(3, narmesteLeder.fnr)
-        it.setString(4, narmesteLeder.narmesteLederFnr)
-        it.setString(5, narmesteLeder.narmesteLederTelefonnummer)
-        it.setString(6, narmesteLeder.narmesteLederEpost)
-        it.setObject(7, narmesteLeder.arbeidsgiverForskutterer)
-        it.setObject(8, narmesteLeder.aktivFom)
-        it.setTimestamp(9, Timestamp.from(narmesteLeder.timestamp.toInstant()))
-        it.execute()
-    }
+        )
+        .use {
+            it.setObject(1, narmesteLeder.narmesteLederId)
+            it.setString(2, narmesteLeder.orgnummer)
+            it.setString(3, narmesteLeder.fnr)
+            it.setString(4, narmesteLeder.narmesteLederFnr)
+            it.setString(5, narmesteLeder.narmesteLederTelefonnummer)
+            it.setString(6, narmesteLeder.narmesteLederEpost)
+            it.setObject(7, narmesteLeder.arbeidsgiverForskutterer)
+            it.setObject(8, narmesteLeder.aktivFom)
+            it.setTimestamp(9, Timestamp.from(narmesteLeder.timestamp.toInstant()))
+            it.execute()
+        }
 }
 
 private fun Connection.slettNarmesteLeder(narmesteLederId: UUID) =
     this.prepareStatement(
-        """
+            """
             DELETE FROM narmeste_leder 
                 WHERE narmeste_leder_id = ?;
             """,
-    ).use {
-        it.setObject(1, narmesteLederId)
-        it.execute()
-    }
+        )
+        .use {
+            it.setObject(1, narmesteLederId)
+            it.execute()
+        }
 
 private fun Connection.oppdaterNarmesteLeder(narmesteLeder: NarmesteLeder) =
     this.prepareStatement(
-        """
+            """
             UPDATE narmeste_leder 
                 SET narmeste_leder_telefonnummer = ?, narmeste_leder_epost = ?, arbeidsgiver_forskutterer = ?, timestamp = ?
                 WHERE narmeste_leder_id = ?;
             """,
-    ).use {
-        it.setString(1, narmesteLeder.narmesteLederTelefonnummer)
-        it.setString(2, narmesteLeder.narmesteLederEpost)
-        it.setObject(3, narmesteLeder.arbeidsgiverForskutterer)
-        it.setTimestamp(4, Timestamp.from(narmesteLeder.timestamp.toInstant()))
-        it.setObject(5, narmesteLeder.narmesteLederId)
-        it.execute()
-    }
+        )
+        .use {
+            it.setString(1, narmesteLeder.narmesteLederTelefonnummer)
+            it.setString(2, narmesteLeder.narmesteLederEpost)
+            it.setObject(3, narmesteLeder.arbeidsgiverForskutterer)
+            it.setTimestamp(4, Timestamp.from(narmesteLeder.timestamp.toInstant()))
+            it.setObject(5, narmesteLeder.narmesteLederId)
+            it.execute()
+        }
 
 private fun ResultSet.toNarmesteLeder(): NarmesteLeder =
     NarmesteLeder(

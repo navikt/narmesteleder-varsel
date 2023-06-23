@@ -4,13 +4,15 @@ import no.nav.doknotifikasjon.schemas.NotifikasjonMedkontaktInfo
 import no.nav.doknotifikasjon.schemas.PrefererteKanal
 import no.nav.syfo.narmesteleder.model.NarmesteLeder
 
-const val SMS_TEKST = """
+const val SMS_TEKST =
+    """
 Hei!
 Du har fått tilgang til sykmeldingen til en av dine ansatte.
 Logg inn på "Min side - arbeidsgiver" og finn sykmeldingen der. 
 Vennlig hilsen NAV
 """
-const val EPOST_TEKST = """
+const val EPOST_TEKST =
+    """
 <!DOCTYPE html>
 <html>
 <head>
@@ -27,7 +29,10 @@ const val EPOST_TEKST = """
 </html>
 """
 
-fun tilNotifikasjonMedkontaktInfo(bestillingsId: String, narmesteLeder: NarmesteLeder): NotifikasjonMedkontaktInfo {
+fun tilNotifikasjonMedkontaktInfo(
+    bestillingsId: String,
+    narmesteLeder: NarmesteLeder
+): NotifikasjonMedkontaktInfo {
     return NotifikasjonMedkontaktInfo.newBuilder()
         .setBestillingsId(bestillingsId)
         .setBestillerId("narmesteleder-varsel")
@@ -39,5 +44,6 @@ fun tilNotifikasjonMedkontaktInfo(bestillingsId: String, narmesteLeder: Narmeste
         .setTittel("Sykmeldt arbeidstaker")
         .setEpostTekst(EPOST_TEKST)
         .setSmsTekst(SMS_TEKST)
-        .setPrefererteKanaler(listOf(PrefererteKanal.EPOST)).build()
+        .setPrefererteKanaler(listOf(PrefererteKanal.EPOST))
+        .build()
 }

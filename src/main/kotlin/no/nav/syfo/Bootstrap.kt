@@ -42,45 +42,71 @@ fun main() {
     val applicationState = ApplicationState()
     val database = Database(env)
 
-    val applicationEngine = createApplicationEngine(
-        env,
-        applicationState,
-    )
+    val applicationEngine =
+        createApplicationEngine(
+            env,
+            applicationState,
+        )
     val oppdaterNarmesteLederService = OppdaterNarmesteLederService(database)
-    val kafkaConsumer = KafkaConsumer(
-        KafkaUtils.getAivenKafkaConfig().also { it[ConsumerConfig.AUTO_OFFSET_RESET_CONFIG] = "none" }.toConsumerConfig("narmesteleder-varsel", JacksonKafkaDeserializer::class),
-        StringDeserializer(),
-        JacksonKafkaDeserializer(NarmesteLederLeesah::class),
-    )
-    val narmesteLederLeesahConsumerService = NarmesteLederLeesahConsumerService(
-        kafkaConsumer,
-        applicationState,
-        env.narmesteLederLeesahTopic,
-        oppdaterNarmesteLederService,
-    )
+    val kafkaConsumer =
+        KafkaConsumer(
+            KafkaUtils.getAivenKafkaConfig()
+                .also { it[ConsumerConfig.AUTO_OFFSET_RESET_CONFIG] = "none" }
+                .toConsumerConfig("narmesteleder-varsel", JacksonKafkaDeserializer::class),
+            StringDeserializer(),
+            JacksonKafkaDeserializer(NarmesteLederLeesah::class),
+        )
+    val narmesteLederLeesahConsumerService =
+        NarmesteLederLeesahConsumerService(
+            kafkaConsumer,
+            applicationState,
+            env.narmesteLederLeesahTopic,
+            oppdaterNarmesteLederService,
+        )
 
-    val kafkaConsumerSendtSykmelding = KafkaConsumer(
-        KafkaUtils.getAivenKafkaConfig().also { it[ConsumerConfig.AUTO_OFFSET_RESET_CONFIG] = "none" }.toConsumerConfig("narmesteleder-varsel", JacksonKafkaDeserializer::class),
-        StringDeserializer(),
-        JacksonKafkaDeserializer(SendtSykmelding::class),
-    )
+    val kafkaConsumerSendtSykmelding =
+        KafkaConsumer(
+            KafkaUtils.getAivenKafkaConfig()
+                .also { it[ConsumerConfig.AUTO_OFFSET_RESET_CONFIG] = "none" }
+                .toConsumerConfig("narmesteleder-varsel", JacksonKafkaDeserializer::class),
+            StringDeserializer(),
+            JacksonKafkaDeserializer(SendtSykmelding::class),
+        )
 
-    val kafkaProducerDoknotifikasjon = KafkaProducer<String, NotifikasjonMedkontaktInfo>(
-        KafkaUtils
-            .getAivenKafkaConfig().apply {
-                setProperty(KafkaAvroSerializerConfig.SCHEMA_REGISTRY_URL_CONFIG, env.schemaRegistryUrl)
-                setProperty(KafkaAvroSerializerConfig.USER_INFO_CONFIG, "${env.kafkaSchemaRegistryUsername}:${env.kafkaSchemaRegistryPassword}")
-                setProperty(KafkaAvroSerializerConfig.BASIC_AUTH_CREDENTIALS_SOURCE, "USER_INFO")
-            }.toProducerConfig("${env.applicationName}-producer", valueSerializer = KafkaAvroSerializer::class, keySerializer = StringSerializer::class),
-    )
-    val doknotifikasjonProducer = DoknotifikasjonProducer(kafkaProducerDoknotifikasjon, env.doknotifikasjonTopic)
-    val sendtSykmeldingVarselService = SendtSykmeldingVarselService(database, doknotifikasjonProducer)
-    val sendtSykmeldingConsumerService = SendtSykmeldingConsumerService(
-        kafkaConsumerSendtSykmelding,
-        sendtSykmeldingVarselService,
-        env.sendtSykmeldingKafkaTopic,
-        applicationState,
-    )
+    val kafkaProducerDoknotifikasjon =
+        KafkaProducer<String, NotifikasjonMedkontaktInfo>(
+            KafkaUtils.getAivenKafkaConfig()
+                .apply {
+                    setProperty(
+                        KafkaAvroSerializerConfig.SCHEMA_REGISTRY_URL_CONFIG,
+                        env.schemaRegistryUrl
+                    )
+                    setProperty(
+                        KafkaAvroSerializerConfig.USER_INFO_CONFIG,
+                        "${env.kafkaSchemaRegistryUsername}:${env.kafkaSchemaRegistryPassword}"
+                    )
+                    setProperty(
+                        KafkaAvroSerializerConfig.BASIC_AUTH_CREDENTIALS_SOURCE,
+                        "USER_INFO"
+                    )
+                }
+                .toProducerConfig(
+                    "${env.applicationName}-producer",
+                    valueSerializer = KafkaAvroSerializer::class,
+                    keySerializer = StringSerializer::class
+                ),
+        )
+    val doknotifikasjonProducer =
+        DoknotifikasjonProducer(kafkaProducerDoknotifikasjon, env.doknotifikasjonTopic)
+    val sendtSykmeldingVarselService =
+        SendtSykmeldingVarselService(database, doknotifikasjonProducer)
+    val sendtSykmeldingConsumerService =
+        SendtSykmeldingConsumerService(
+            kafkaConsumerSendtSykmelding,
+            sendtSykmeldingVarselService,
+            env.sendtSykmeldingKafkaTopic,
+            applicationState,
+        )
 
     val applicationServer = ApplicationServer(applicationEngine, applicationState)
 
@@ -96,7 +122,10 @@ fun main() {
 }
 
 @DelicateCoroutinesApi
-fun startBackgroundJob(applicationState: ApplicationState, block: suspend CoroutineScope.() -> Unit) {
+fun startBackgroundJob(
+    applicationState: ApplicationState,
+    block: suspend CoroutineScope.() -> Unit
+) {
     GlobalScope.launch(Dispatchers.Unbounded) {
         try {
             block()

@@ -25,13 +25,14 @@ val avroVersion = "1.11.1"
 val confluentVersion = "7.4.0"
 val doknotifikasjonAvroVersion = "1.2021.06.22-11.27-265ce1fe1ab4"
 val kotlinVersion = "1.8.22"
+val ktfmtVersion = "0.44"
+
 
 tasks.withType<Jar> {
     manifest.attributes["Main-Class"] = "no.nav.syfo.BootstrapKt"
 }
 
 plugins {
-    id("org.jmailen.kotlinter") version "3.15.0"
     kotlin("jvm") version "1.8.22"
     id("com.diffplug.spotless") version "6.19.0"
     id("com.github.johnrengelman.shadow") version "8.1.1"
@@ -133,7 +134,10 @@ tasks {
         }
     }
 
-    "check" {
-        dependsOn("formatKotlin")
+    spotless {
+        kotlin { ktfmt(ktfmtVersion).kotlinlangStyle() }
+        check {
+            dependsOn("spotlessApply")
+        }
     }
 }
