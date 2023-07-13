@@ -24,7 +24,7 @@ val kafkaVersion = "3.3.1"
 val avroVersion = "1.11.2"
 val confluentVersion = "7.4.0"
 val doknotifikasjonAvroVersion = "1.2021.06.22-11.27-265ce1fe1ab4"
-val kotlinVersion = "1.8.22"
+val kotlinVersion = "1.9.0"
 val ktfmtVersion = "0.44"
 
 
