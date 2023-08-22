@@ -42,13 +42,10 @@ spec:
       memory: 512Mi
   vault:
     enabled: false
-  envFrom:
-    - secret: narmesteleder-varsel-secret
-  ingresses:
-    - "https://narmesteleder-varsel.intern.nav.no"
-  webproxy: true
   kafka:
     pool: nav-prod
   env:
     - name: KAFKA_CLIENT_ID
       value: narmesteleder-varsel
+  envFrom:
+    - secret: narmesteleder-varsel-secret
