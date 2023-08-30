@@ -18,13 +18,13 @@ val mockkVersion = "1.13.7"
 val nimbusdsVersion = "9.31"
 val testContainerVersion = "1.19.0"
 val postgresVersion = "42.6.0"
-val flywayVersion = "9.21.2"
+val flywayVersion = "9.22.0"
 val hikariVersion = "5.0.1"
-val kafkaVersion = "3.3.1"
+val kafkaVersion = "7.5.0-ce"
 val avroVersion = "1.11.2"
-val confluentVersion = "7.4.1"
-val doknotifikasjonAvroVersion = "1.2021.06.22-11.27-265ce1fe1ab4"
-val kotlinVersion = "1.9.0"
+val confluentVersion = "7.5.0"
+val doknotifikasjonAvroVersion = "1.2022.06.07-10.21-210529ac5c88"
+val kotlinVersion = "1.9.10"
 val ktfmtVersion = "0.44"
 
 
@@ -33,8 +33,8 @@ tasks.withType<Jar> {
 }
 
 plugins {
-    kotlin("jvm") version "1.9.0"
-    id("com.diffplug.spotless") version "6.20.0"
+    kotlin("jvm") version "1.9.10"
+    id("com.diffplug.spotless") version "6.21.0"
     id("com.github.johnrengelman.shadow") version "8.1.1"
     id("org.cyclonedx.bom") version "1.7.4"
 }
