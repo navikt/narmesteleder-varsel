@@ -1,47 +1,41 @@
-import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
-import com.github.jengelman.gradle.plugins.shadow.transformers.ServiceFileTransformer
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
-
 group = "no.nav.syfo"
 version = "1.0.0"
 
 val coroutinesVersion = "1.7.3"
 val jacksonVersion = "2.15.2"
 val kluentVersion = "1.73"
-val ktorVersion = "2.3.3"
+val ktorVersion = "2.3.4"
 val logbackVersion = "1.4.11"
 val logstashEncoderVersion = "7.4"
 val prometheusVersion = "0.16.0"
-val kotestVersion = "5.7.1"
+val kotestVersion = "5.7.2"
 val smCommonVersion = "1.0.10"
 val mockkVersion = "1.13.7"
 val nimbusdsVersion = "9.31"
 val testContainerVersion = "1.19.0"
 val postgresVersion = "42.6.0"
-val flywayVersion = "9.21.2"
+val flywayVersion = "9.22.0"
 val hikariVersion = "5.0.1"
 val kafkaVersion = "3.3.1"
 val avroVersion = "1.11.2"
-val confluentVersion = "7.4.1"
+val confluentVersion = "7.5.0"
 val doknotifikasjonAvroVersion = "1.2021.06.22-11.27-265ce1fe1ab4"
-val kotlinVersion = "1.9.0"
+val kotlinVersion = "1.9.10"
 val ktfmtVersion = "0.44"
 
 
-tasks.withType<Jar> {
-    manifest.attributes["Main-Class"] = "no.nav.syfo.BootstrapKt"
-}
-
 plugins {
-    kotlin("jvm") version "1.9.0"
-    id("com.diffplug.spotless") version "6.20.0"
+    id("application")
+    kotlin("jvm") version "1.9.10"
+    id("com.diffplug.spotless") version "6.21.0"
     id("com.github.johnrengelman.shadow") version "8.1.1"
-    id("org.cyclonedx.bom") version "1.7.4"
 }
 
-buildscript {
-    dependencies {
-    }
+application {
+    mainClass.set("no.nav.syfo.BootstrapKt")
+
+    val isDevelopment: Boolean = project.ext.has("development")
+    applicationDefaultJvmArgs = listOf("-Dio.ktor.development=$isDevelopment")
 }
 
 val githubUser: String by project
@@ -109,30 +103,24 @@ dependencies {
 
 tasks {
 
-    create("printVersion") {
-        println(project.version)
-    }
-
-    withType<KotlinCompile> {
-        kotlinOptions.jvmTarget = "17"
-    }
-
-    withType<ShadowJar> {
-        transform(ServiceFileTransformer::class.java) {
-            setPath("META-INF/cxf")
-            include("bus-extensions.txt")
+    shadowJar {
+        archiveBaseName.set("app")
+        archiveClassifier.set("")
+        isZip64 = true
+        manifest {
+            attributes(
+                mapOf(
+                    "Main-Class" to "no.nav.syfo.BootstrapKt",
+                ),
+            )
         }
     }
 
-    withType<Test> {
-        useJUnitPlatform {
-        }
-        testLogging {
-            events("skipped", "failed")
-            showStackTraces = true
-            exceptionFormat = org.gradle.api.tasks.testing.logging.TestExceptionFormat.FULL
-        }
+    test {
+        useJUnitPlatform {}
+        testLogging.showStandardStreams = true
     }
+
 
     spotless {
         kotlin { ktfmt(ktfmtVersion).kotlinlangStyle() }
@@ -140,4 +128,6 @@ tasks {
             dependsOn("spotlessApply")
         }
     }
+
 }
+
