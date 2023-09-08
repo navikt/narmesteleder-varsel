@@ -7,8 +7,9 @@ updates:
     open-pull-requests-limit: 15
     ignore:
       - dependency-name: "kafka_2.12"
+        update-types: ["version-update:semver-patch", "version-update:semver-minor"]
       - dependency-name: "doknotifikasjon-schemas"
-    groups:
+        update-types: ["version-update:semver-patch", "version-update:semver-minor"]    groups:
       dependencies:
         patterns:
           - "*"
