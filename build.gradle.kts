@@ -22,7 +22,8 @@ val confluentVersion = "7.5.0"
 val doknotifikasjonAvroVersion = "1.2021.06.22-11.27-265ce1fe1ab4"
 val kotlinVersion = "1.9.10"
 val ktfmtVersion = "0.44"
-
+val snappyJavaVersion = "1.1.10.1"
+val commonsCodecVersion = "1.16.0"
 
 plugins {
     id("application")
@@ -88,6 +89,11 @@ dependencies {
     implementation("org.postgresql:postgresql:$postgresVersion")
     implementation("com.zaxxer:HikariCP:$hikariVersion")
     implementation("org.flywaydb:flyway-core:$flywayVersion")
+    //due to https://github.com/advisories/GHSA-qcwq-55hx-v3vh
+    implementation("org.xerial.snappy:snappy-java:$snappyJavaVersion")
+    // override transient version from io.ktor:ktor-server-test-host due to security vulnerability
+    // https://devhub.checkmarx.com/cve-details/Cxeb68d52e-5509/
+    implementation("commons-codec:commons-codec:$commonsCodecVersion")
 
     testImplementation("org.amshove.kluent:kluent:$kluentVersion")
     testImplementation("io.mockk:mockk:$mockkVersion")
