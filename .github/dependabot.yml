@@ -9,7 +9,7 @@ updates:
       - dependency-name: "org.apache.kafka:kafka_2.12"
         update-types: ["version-update:semver-major"]
       - dependency-name: "com.github.navikt:doknotifikasjon-schemas"
-        update-types: ["version-update:semver-major"]
+        update-types: ["version-update:semver-patch", "version-update:semver-minor","version-update:semver-major"]
     groups:
       dependencies:
         patterns:
