@@ -9,7 +9,8 @@ updates:
       - dependency-name: "kafka_2.12"
         update-types: ["version-update:semver-patch", "version-update:semver-minor"]
       - dependency-name: "doknotifikasjon-schemas"
-        update-types: ["version-update:semver-patch", "version-update:semver-minor"]    groups:
+        update-types: ["version-update:semver-patch", "version-update:semver-minor"]
+    groups:
       dependencies:
         patterns:
           - "*"
