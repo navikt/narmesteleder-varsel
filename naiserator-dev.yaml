@@ -36,7 +36,6 @@ spec:
     path: /internal/prometheus
   resources:
     limits:
-      cpu: 200m
       memory: 1Gi
     requests:
       cpu: 100m
@@ -45,8 +44,6 @@ spec:
     enabled: false
   envFrom:
     - secret: narmesteleder-varsel-secret
-  ingresses:
-    - "https://narmesteleder-varsel.dev.intern.nav.no"
   webproxy: true
   kafka:
     pool: nav-dev
