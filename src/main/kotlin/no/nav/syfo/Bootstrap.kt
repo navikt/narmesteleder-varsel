@@ -50,7 +50,7 @@ fun main() {
     val oppdaterNarmesteLederService = OppdaterNarmesteLederService(database)
     val kafkaConsumer =
         KafkaConsumer(
-            KafkaUtils.getAivenKafkaConfig()
+            KafkaUtils.getAivenKafkaConfig("narmeste-leder-leesah-consumer")
                 .also { it[ConsumerConfig.AUTO_OFFSET_RESET_CONFIG] = "none" }
                 .toConsumerConfig("narmesteleder-varsel", JacksonKafkaDeserializer::class),
             StringDeserializer(),
@@ -66,7 +66,7 @@ fun main() {
 
     val kafkaConsumerSendtSykmelding =
         KafkaConsumer(
-            KafkaUtils.getAivenKafkaConfig()
+            KafkaUtils.getAivenKafkaConfig("sendt-sykmelding-consumer")
                 .also { it[ConsumerConfig.AUTO_OFFSET_RESET_CONFIG] = "none" }
                 .toConsumerConfig("narmesteleder-varsel", JacksonKafkaDeserializer::class),
             StringDeserializer(),
@@ -75,7 +75,7 @@ fun main() {
 
     val kafkaProducerDoknotifikasjon =
         KafkaProducer<String, NotifikasjonMedkontaktInfo>(
-            KafkaUtils.getAivenKafkaConfig()
+            KafkaUtils.getAivenKafkaConfig("doknotifikasjon-producer")
                 .apply {
                     setProperty(
                         KafkaAvroSerializerConfig.SCHEMA_REGISTRY_URL_CONFIG,
