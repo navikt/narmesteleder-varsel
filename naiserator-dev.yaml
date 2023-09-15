@@ -38,8 +38,8 @@ spec:
     limits:
       memory: 1Gi
     requests:
-      cpu: 100m
-      memory: 256Mi
+      cpu: 150m
+      memory: 512Mi
   vault:
     enabled: false
   envFrom:
