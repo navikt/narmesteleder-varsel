@@ -40,11 +40,8 @@ spec:
     requests:
       cpu: 150m
       memory: 512Mi
-  vault:
-    enabled: false
   envFrom:
     - secret: narmesteleder-varsel-secret
-  webproxy: true
   kafka:
     pool: nav-dev
   env:
