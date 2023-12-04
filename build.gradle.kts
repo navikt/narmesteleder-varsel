@@ -81,7 +81,8 @@ dependencies {
 
     implementation("org.postgresql:postgresql:$postgresVersion")
     implementation("com.zaxxer:HikariCP:$hikariVersion")
-    implementation("org.flywaydb:flyway-core:$flywayVersion")
+    compileOnly("org.flywaydb:flyway-core:$flywayVersion")
+    implementation("org.flywaydb:flyway-database-postgresql:$flywayVersion")
     //due to https://github.com/advisories/GHSA-qcwq-55hx-v3vh
     implementation("org.xerial.snappy:snappy-java:$snappyJavaVersion")
     // override transient version from io.ktor:ktor-server-test-host due to security vulnerability
