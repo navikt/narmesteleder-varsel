@@ -20,14 +20,14 @@ val kafkaVersion = "3.6.1"
 val avroVersion = "1.11.3"
 val confluentVersion = "7.5.2"
 val doknotifikasjonAvroVersion = "1.2021.06.22-11.27-265ce1fe1ab4"
-val kotlinVersion = "1.9.21"
+val kotlinVersion = "1.9.22"
 val ktfmtVersion = "0.44"
 val snappyJavaVersion = "1.1.10.5"
 val commonsCodecVersion = "1.16.0"
 
 plugins {
     id("application")
-    kotlin("jvm") version "1.9.21"
+    kotlin("jvm") version "1.9.22"
     id("com.diffplug.spotless") version "6.23.3"
     id("com.github.johnrengelman.shadow") version "8.1.1"
 }
