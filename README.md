@@ -10,7 +10,7 @@ This project contains the application code and infrastructure for narmesteleder-
 
 #### Requirements
 
-* JDK 17
+* JDK 21
 
 ## FlowChart
 This the high level flow of the application
