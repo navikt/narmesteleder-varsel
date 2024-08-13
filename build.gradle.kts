@@ -9,7 +9,6 @@ val logbackVersion = "1.5.6"
 val logstashEncoderVersion = "8.0"
 val prometheusVersion = "0.16.0"
 val kotestVersion = "5.9.1"
-val smCommonVersion = "2.0.8"
 val mockkVersion = "1.13.12"
 val nimbusdsVersion = "9.40"
 val testContainerVersion = "1.20.1"
@@ -63,10 +62,9 @@ dependencies {
     implementation("io.ktor:ktor-server-netty:$ktorVersion")
     implementation("io.ktor:ktor-serialization-jackson:$ktorVersion")
 
-    implementation("no.nav.helse:syfosm-common-kafka:$smCommonVersion")
-    implementation("no.nav.helse:syfosm-common-models:$smCommonVersion")
 
     implementation("org.apache.kafka:kafka_2.12:$kafkaVersion")
+    implementation("org.apache.kafka:kafka-streams:$kafkaVersion")
     implementation("io.confluent:kafka-avro-serializer:$confluentVersion")
     implementation("org.apache.avro:avro:$avroVersion")
     implementation("com.github.navikt:doknotifikasjon-schemas:$doknotifikasjonAvroVersion")
