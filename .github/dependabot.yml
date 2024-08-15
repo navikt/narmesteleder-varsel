@@ -8,8 +8,9 @@ updates:
     ignore:
       - dependency-name: "org.apache.kafka:kafka_2.12"
         update-types: ["version-update:semver-major"]
-      - dependency-name: "com.github.navikt:brukernotifikasjon-schemas"
+      - dependency-name: "org.apache.kafka:kafka-streams"
         update-types: ["version-update:semver-major"]
+      - dependency-name: "com.github.navikt:brukernotifikasjon-schemas"
     groups:
       dependencies:
         patterns:
