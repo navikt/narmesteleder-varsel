@@ -10,7 +10,7 @@ updates:
         update-types: ["version-update:semver-major"]
       - dependency-name: "org.apache.kafka:kafka-streams"
         update-types: ["version-update:semver-major"]
-      - dependency-name: "com.github.navikt:brukernotifikasjon-schemas"
+      - dependency-name: "com.github.navikt:doknotifikasjon-schemas"
     groups:
       dependencies:
         patterns:
