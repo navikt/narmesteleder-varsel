@@ -15,6 +15,7 @@ spec:
         databases:
           - name: narmesteleder-varsel
             envVarPrefix: NAIS_DATABASE
+        tier: db-custom-2-5120
   replicas:
     min: 2
     max: 4
