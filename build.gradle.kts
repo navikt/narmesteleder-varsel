@@ -21,7 +21,7 @@ val confluentVersion = "7.7.0"
 val doknotifikasjonAvroVersion = "1.2021.06.22-11.27-265ce1fe1ab4"
 val kotlinVersion = "2.0.20"
 val ktfmtVersion = "0.44"
-val snappyJavaVersion = "1.1.10.6"
+val snappyJavaVersion = "1.1.10.7"
 val commonsCodecVersion = "1.17.1"
 
 plugins {
