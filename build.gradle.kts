@@ -4,11 +4,10 @@ version = "1.0.0"
 val coroutinesVersion = "1.9.0"
 val jacksonVersion = "2.18.0"
 val kluentVersion = "1.73"
-val ktorVersion = "2.3.12"
+val ktorVersion = "3.0.1"
 val logbackVersion = "1.5.8"
 val logstashEncoderVersion = "8.0"
 val prometheusVersion = "0.16.0"
-val kotestVersion = "5.9.1"
 val mockkVersion = "1.13.12"
 val nimbusdsVersion = "9.41.1"
 val testContainerVersion = "1.20.1"
@@ -20,7 +19,10 @@ val avroVersion = "1.12.0"
 val confluentVersion = "7.7.1"
 val doknotifikasjonAvroVersion = "1.2021.06.22-11.27-265ce1fe1ab4"
 val kotlinVersion = "2.0.20"
+val junitJupiterVersion = "5.11.3"
 val ktfmtVersion = "0.44"
+
+
 val snappyJavaVersion = "1.1.10.7"
 val commonsCodecVersion = "1.17.1"
 
@@ -28,7 +30,7 @@ plugins {
     id("application")
     kotlin("jvm") version "2.0.20"
     id("com.diffplug.spotless") version "6.25.0"
-    id("com.github.johnrengelman.shadow") version "8.1.1"
+    id("com.gradleup.shadow") version "8.3.4"
 }
 
 application {
@@ -64,7 +66,6 @@ dependencies {
 
 
     implementation("org.apache.kafka:kafka_2.12:$kafkaVersion")
-    implementation("org.apache.kafka:kafka-streams:$kafkaVersion")
     implementation("io.confluent:kafka-avro-serializer:$confluentVersion")
     implementation("org.apache.avro:avro:$avroVersion")
     implementation("com.github.navikt:doknotifikasjon-schemas:$doknotifikasjonAvroVersion")
@@ -81,20 +82,27 @@ dependencies {
     implementation("com.zaxxer:HikariCP:$hikariVersion")
     compileOnly("org.flywaydb:flyway-core:$flywayVersion")
     implementation("org.flywaydb:flyway-database-postgresql:$flywayVersion")
-    //due to https://github.com/advisories/GHSA-qcwq-55hx-v3vh
-    implementation("org.xerial.snappy:snappy-java:$snappyJavaVersion")
-    // override transient version from io.ktor:ktor-server-test-host due to security vulnerability
-    // https://devhub.checkmarx.com/cve-details/Cxeb68d52e-5509/
-    implementation("commons-codec:commons-codec:$commonsCodecVersion")
+    constraints {
+        implementation("org.xerial.snappy:snappy-java:$snappyJavaVersion") {
+            because("due to https://github.com/advisories/GHSA-qcwq-55hx-v3vh")
+        }
+    }
 
+    testImplementation("org.junit.jupiter:junit-jupiter:$junitJupiterVersion")
+    testRuntimeOnly("org.junit.platform:junit-platform-launcher")
     testImplementation("org.amshove.kluent:kluent:$kluentVersion")
     testImplementation("io.mockk:mockk:$mockkVersion")
-    testImplementation("io.kotest:kotest-runner-junit5:$kotestVersion")
     testImplementation("com.nimbusds:nimbus-jose-jwt:$nimbusdsVersion")
     testImplementation("org.testcontainers:kafka:$testContainerVersion")
     testImplementation("org.testcontainers:postgresql:$testContainerVersion")
     testImplementation("io.ktor:ktor-server-test-host:$ktorVersion") {
         exclude(group = "org.eclipse.jetty")
+    }
+    constraints {
+        testImplementation("commons-codec:commons-codec:$commonsCodecVersion") {
+            because("override transient version from io.ktor:ktor-server-test-host due to security vulnerability\n" +
+                "    // https://devhub.checkmarx.com/cve-details/Cxeb68d52e-5509/")
+        }
     }
 }
 

@@ -1,6 +1,5 @@
 package no.nav.syfo.sykmeldingvarsel
 
-import io.kotest.core.spec.style.FunSpec
 import io.mockk.clearMocks
 import io.mockk.mockk
 import io.mockk.verify
@@ -23,200 +22,204 @@ import no.nav.syfo.sykmeldingvarsel.kafka.SendtEvent
 import no.nav.syfo.sykmeldingvarsel.kafka.SendtSykmelding
 import no.nav.syfo.testutils.TestDB
 import org.amshove.kluent.shouldBeEqualTo
+import org.junit.jupiter.api.AfterEach
+import org.junit.jupiter.api.Test
 
-class SendtSykmeldingVarselServiceTest :
-    FunSpec({
-        val testDb = TestDB.database
-        val doknotifikasjonProducer = mockk<DoknotifikasjonProducer>(relaxed = true)
-        val sendtSykmeldingVarselService =
-            SendtSykmeldingVarselService(testDb, doknotifikasjonProducer)
+internal class SendtSykmeldingVarselServiceTest {
+    val testDb = TestDB.database
+    val doknotifikasjonProducer = mockk<DoknotifikasjonProducer>(relaxed = true)
+    val sendtSykmeldingVarselService = SendtSykmeldingVarselService(testDb, doknotifikasjonProducer)
 
-        val fnrAnsatt = "12345678910"
-        val fnrLeder = "01987654321"
-        val orgnummer = "999000"
+    val fnrAnsatt = "12345678910"
+    val fnrLeder = "01987654321"
+    val orgnummer = "999000"
 
-        afterTest {
-            TestDB.dropData()
-            clearMocks(doknotifikasjonProducer)
-        }
+    @AfterEach
+    fun afterTest() {
+        TestDB.dropData()
+        clearMocks(doknotifikasjonProducer)
+    }
 
-        context("SendtSykmeldingVarselService") {
-            test("Sender varsel til nl hvis nl finnes og varsel ikke er sendt før") {
-                val sykmeldingId = UUID.randomUUID().toString()
-                val narmesteLederId = UUID.randomUUID()
-                testDb.lagreNarmesteLeder(
-                    NarmesteLeder(
-                        narmesteLederId = narmesteLederId,
-                        fnr = fnrAnsatt,
-                        orgnummer = orgnummer,
-                        narmesteLederFnr = fnrLeder,
-                        narmesteLederTelefonnummer = "90909090",
-                        narmesteLederEpost = "epost@nav.no",
-                        aktivFom = LocalDate.now(),
-                        arbeidsgiverForskutterer = true,
-                        timestamp = OffsetDateTime.now(ZoneOffset.UTC),
-                    ),
-                )
+    @Test
+    internal fun `SendtSykmeldingVarselService Sender varsel til nl hvis nl finnes og varsel ikke er sendt før`() {
+        val sykmeldingId = UUID.randomUUID().toString()
+        val narmesteLederId = UUID.randomUUID()
+        testDb.lagreNarmesteLeder(
+            NarmesteLeder(
+                narmesteLederId = narmesteLederId,
+                fnr = fnrAnsatt,
+                orgnummer = orgnummer,
+                narmesteLederFnr = fnrLeder,
+                narmesteLederTelefonnummer = "90909090",
+                narmesteLederEpost = "epost@nav.no",
+                aktivFom = LocalDate.now(),
+                arbeidsgiverForskutterer = true,
+                timestamp = OffsetDateTime.now(ZoneOffset.UTC),
+            ),
+        )
 
-                sendtSykmeldingVarselService.handterSendtSykmelding(
-                    SendtSykmelding(
-                        KafkaMetadataDTO(
-                            sykmeldingId = sykmeldingId,
-                            timestamp = OffsetDateTime.now(ZoneOffset.UTC),
-                            fnr = fnrAnsatt,
-                            source = "user",
-                        ),
-                        SendtEvent(
-                            ArbeidsgiverStatus(orgnummer),
-                            listOf(
-                                SporsmalOgSvarDTO(
-                                    "Be om ny nærmeste leder?",
-                                    ShortNameDTO.NY_NARMESTE_LEDER,
-                                    SvartypeDTO.JA_NEI,
-                                    "NEI"
-                                ),
-                            ),
-                        ),
-                    ),
-                )
-
-                testDb.harSendtVarsel(sykmeldingId, VarselType.SENDT_SYKMELDING) shouldBeEqualTo
-                    true
-                verify { doknotifikasjonProducer.send(any(), any()) }
-            }
-            test("Sender ikke varsel hvis nl gjelder annet arbeidsforhold") {
-                val sykmeldingId = UUID.randomUUID().toString()
-                val narmesteLederId = UUID.randomUUID()
-                testDb.lagreNarmesteLeder(
-                    NarmesteLeder(
-                        narmesteLederId = narmesteLederId,
-                        fnr = fnrAnsatt,
-                        orgnummer = orgnummer,
-                        narmesteLederFnr = fnrLeder,
-                        narmesteLederTelefonnummer = "90909090",
-                        narmesteLederEpost = "epost@nav.no",
-                        aktivFom = LocalDate.now(),
-                        arbeidsgiverForskutterer = true,
-                        timestamp = OffsetDateTime.now(ZoneOffset.UTC),
-                    ),
-                )
-
-                sendtSykmeldingVarselService.handterSendtSykmelding(
-                    SendtSykmelding(
-                        KafkaMetadataDTO(
-                            sykmeldingId = sykmeldingId,
-                            timestamp = OffsetDateTime.now(ZoneOffset.UTC),
-                            fnr = fnrAnsatt,
-                            source = "user",
-                        ),
-                        SendtEvent(ArbeidsgiverStatus(orgnummer = "999888"), emptyList()),
-                    ),
-                )
-
-                testDb.harSendtVarsel(sykmeldingId, VarselType.SENDT_SYKMELDING) shouldBeEqualTo
-                    false
-                verify(exactly = 0) { doknotifikasjonProducer.send(any(), any()) }
-            }
-            test("Sender ikke varsel til nl hvis varsel er sendt tidligere") {
-                val sykmeldingId = UUID.randomUUID().toString()
-                val narmesteLederId = UUID.randomUUID()
-                testDb.lagreNarmesteLeder(
-                    NarmesteLeder(
-                        narmesteLederId = narmesteLederId,
-                        fnr = fnrAnsatt,
-                        orgnummer = orgnummer,
-                        narmesteLederFnr = fnrLeder,
-                        narmesteLederTelefonnummer = "90909090",
-                        narmesteLederEpost = "epost@nav.no",
-                        aktivFom = LocalDate.now(),
-                        arbeidsgiverForskutterer = true,
-                        timestamp = OffsetDateTime.now(ZoneOffset.UTC),
-                    ),
-                )
-                testDb.lagreSendtVarsel(
-                    SendtVarsel(
-                        sykmeldingId = sykmeldingId,
-                        narmesteLederId = narmesteLederId,
-                        bestillingId = UUID.randomUUID(),
-                        varselType = VarselType.SENDT_SYKMELDING,
-                        timestamp = OffsetDateTime.now(ZoneOffset.UTC),
-                    ),
-                )
-
-                sendtSykmeldingVarselService.handterSendtSykmelding(
-                    SendtSykmelding(
-                        KafkaMetadataDTO(
-                            sykmeldingId = sykmeldingId,
-                            timestamp = OffsetDateTime.now(ZoneOffset.UTC),
-                            fnr = fnrAnsatt,
-                            source = "user",
-                        ),
-                        SendtEvent(ArbeidsgiverStatus(orgnummer), emptyList()),
-                    ),
-                )
-
-                verify(exactly = 0) { doknotifikasjonProducer.send(any(), any()) }
-            }
-            test("Sender ikke varsel til nl hvis nl ikke finnes") {
-                val sykmeldingId = UUID.randomUUID().toString()
-                sendtSykmeldingVarselService.handterSendtSykmelding(
-                    SendtSykmelding(
-                        KafkaMetadataDTO(
-                            sykmeldingId = sykmeldingId,
-                            timestamp = OffsetDateTime.now(ZoneOffset.UTC),
-                            fnr = fnrAnsatt,
-                            source = "user",
-                        ),
-                        SendtEvent(ArbeidsgiverStatus(orgnummer), emptyList()),
-                    ),
-                )
-
-                testDb.harSendtVarsel(sykmeldingId, VarselType.SENDT_SYKMELDING) shouldBeEqualTo
-                    false
-                verify(exactly = 0) { doknotifikasjonProducer.send(any(), any()) }
-            }
-            test("Sender ikke varsel til nl hvis den sykmeldte har bedt om ny leder") {
-                val sykmeldingId = UUID.randomUUID().toString()
-                val narmesteLederId = UUID.randomUUID()
-                testDb.lagreNarmesteLeder(
-                    NarmesteLeder(
-                        narmesteLederId = narmesteLederId,
-                        fnr = fnrAnsatt,
-                        orgnummer = orgnummer,
-                        narmesteLederFnr = fnrLeder,
-                        narmesteLederTelefonnummer = "90909090",
-                        narmesteLederEpost = "epost@nav.no",
-                        aktivFom = LocalDate.now(),
-                        arbeidsgiverForskutterer = true,
-                        timestamp = OffsetDateTime.now(ZoneOffset.UTC),
-                    ),
-                )
-
-                sendtSykmeldingVarselService.handterSendtSykmelding(
-                    SendtSykmelding(
-                        KafkaMetadataDTO(
-                            sykmeldingId = sykmeldingId,
-                            timestamp = OffsetDateTime.now(ZoneOffset.UTC),
-                            fnr = fnrAnsatt,
-                            source = "user",
-                        ),
-                        SendtEvent(
-                            ArbeidsgiverStatus(orgnummer),
-                            listOf(
-                                SporsmalOgSvarDTO(
-                                    "Be om ny nærmeste leder?",
-                                    ShortNameDTO.NY_NARMESTE_LEDER,
-                                    SvartypeDTO.JA_NEI,
-                                    "JA"
-                                ),
-                            ),
+        sendtSykmeldingVarselService.handterSendtSykmelding(
+            SendtSykmelding(
+                KafkaMetadataDTO(
+                    sykmeldingId = sykmeldingId,
+                    timestamp = OffsetDateTime.now(ZoneOffset.UTC),
+                    fnr = fnrAnsatt,
+                    source = "user",
+                ),
+                SendtEvent(
+                    ArbeidsgiverStatus(orgnummer),
+                    listOf(
+                        SporsmalOgSvarDTO(
+                            "Be om ny nærmeste leder?",
+                            ShortNameDTO.NY_NARMESTE_LEDER,
+                            SvartypeDTO.JA_NEI,
+                            "NEI",
                         ),
                     ),
-                )
+                ),
+            ),
+        )
 
-                testDb.harSendtVarsel(sykmeldingId, VarselType.SENDT_SYKMELDING) shouldBeEqualTo
-                    false
-                verify(exactly = 0) { doknotifikasjonProducer.send(any(), any()) }
-            }
-        }
-    })
+        testDb.harSendtVarsel(sykmeldingId, VarselType.SENDT_SYKMELDING) shouldBeEqualTo true
+        verify { doknotifikasjonProducer.send(any(), any()) }
+    }
+
+    @Test
+    internal fun `SendtSykmeldingVarselService Sender ikke varsel hvis nl gjelder annet arbeidsforhold`() {
+        val sykmeldingId = UUID.randomUUID().toString()
+        val narmesteLederId = UUID.randomUUID()
+        testDb.lagreNarmesteLeder(
+            NarmesteLeder(
+                narmesteLederId = narmesteLederId,
+                fnr = fnrAnsatt,
+                orgnummer = orgnummer,
+                narmesteLederFnr = fnrLeder,
+                narmesteLederTelefonnummer = "90909090",
+                narmesteLederEpost = "epost@nav.no",
+                aktivFom = LocalDate.now(),
+                arbeidsgiverForskutterer = true,
+                timestamp = OffsetDateTime.now(ZoneOffset.UTC),
+            ),
+        )
+
+        sendtSykmeldingVarselService.handterSendtSykmelding(
+            SendtSykmelding(
+                KafkaMetadataDTO(
+                    sykmeldingId = sykmeldingId,
+                    timestamp = OffsetDateTime.now(ZoneOffset.UTC),
+                    fnr = fnrAnsatt,
+                    source = "user",
+                ),
+                SendtEvent(ArbeidsgiverStatus(orgnummer = "999888"), emptyList()),
+            ),
+        )
+
+        testDb.harSendtVarsel(sykmeldingId, VarselType.SENDT_SYKMELDING) shouldBeEqualTo false
+        verify(exactly = 0) { doknotifikasjonProducer.send(any(), any()) }
+    }
+
+    @Test
+    internal fun `SendtSykmeldingVarselService Sender ikke varsel til nl hvis varsel er sendt tidligere`() {
+        val sykmeldingId = UUID.randomUUID().toString()
+        val narmesteLederId = UUID.randomUUID()
+        testDb.lagreNarmesteLeder(
+            NarmesteLeder(
+                narmesteLederId = narmesteLederId,
+                fnr = fnrAnsatt,
+                orgnummer = orgnummer,
+                narmesteLederFnr = fnrLeder,
+                narmesteLederTelefonnummer = "90909090",
+                narmesteLederEpost = "epost@nav.no",
+                aktivFom = LocalDate.now(),
+                arbeidsgiverForskutterer = true,
+                timestamp = OffsetDateTime.now(ZoneOffset.UTC),
+            ),
+        )
+        testDb.lagreSendtVarsel(
+            SendtVarsel(
+                sykmeldingId = sykmeldingId,
+                narmesteLederId = narmesteLederId,
+                bestillingId = UUID.randomUUID(),
+                varselType = VarselType.SENDT_SYKMELDING,
+                timestamp = OffsetDateTime.now(ZoneOffset.UTC),
+            ),
+        )
+
+        sendtSykmeldingVarselService.handterSendtSykmelding(
+            SendtSykmelding(
+                KafkaMetadataDTO(
+                    sykmeldingId = sykmeldingId,
+                    timestamp = OffsetDateTime.now(ZoneOffset.UTC),
+                    fnr = fnrAnsatt,
+                    source = "user",
+                ),
+                SendtEvent(ArbeidsgiverStatus(orgnummer), emptyList()),
+            ),
+        )
+
+        verify(exactly = 0) { doknotifikasjonProducer.send(any(), any()) }
+    }
+
+    @Test
+    internal fun `SendtSykmeldingVarselService Sender ikke varsel til nl hvis nl ikke finnes`() {
+        val sykmeldingId = UUID.randomUUID().toString()
+        sendtSykmeldingVarselService.handterSendtSykmelding(
+            SendtSykmelding(
+                KafkaMetadataDTO(
+                    sykmeldingId = sykmeldingId,
+                    timestamp = OffsetDateTime.now(ZoneOffset.UTC),
+                    fnr = fnrAnsatt,
+                    source = "user",
+                ),
+                SendtEvent(ArbeidsgiverStatus(orgnummer), emptyList()),
+            ),
+        )
+
+        testDb.harSendtVarsel(sykmeldingId, VarselType.SENDT_SYKMELDING) shouldBeEqualTo false
+        verify(exactly = 0) { doknotifikasjonProducer.send(any(), any()) }
+    }
+
+    @Test
+    internal fun `SendtSykmeldingVarselService Sender ikke varsel til nl hvis den sykmeldte har bedt om ny leder`() {
+        val sykmeldingId = UUID.randomUUID().toString()
+        val narmesteLederId = UUID.randomUUID()
+        testDb.lagreNarmesteLeder(
+            NarmesteLeder(
+                narmesteLederId = narmesteLederId,
+                fnr = fnrAnsatt,
+                orgnummer = orgnummer,
+                narmesteLederFnr = fnrLeder,
+                narmesteLederTelefonnummer = "90909090",
+                narmesteLederEpost = "epost@nav.no",
+                aktivFom = LocalDate.now(),
+                arbeidsgiverForskutterer = true,
+                timestamp = OffsetDateTime.now(ZoneOffset.UTC),
+            ),
+        )
+
+        sendtSykmeldingVarselService.handterSendtSykmelding(
+            SendtSykmelding(
+                KafkaMetadataDTO(
+                    sykmeldingId = sykmeldingId,
+                    timestamp = OffsetDateTime.now(ZoneOffset.UTC),
+                    fnr = fnrAnsatt,
+                    source = "user",
+                ),
+                SendtEvent(
+                    ArbeidsgiverStatus(orgnummer),
+                    listOf(
+                        SporsmalOgSvarDTO(
+                            "Be om ny nærmeste leder?",
+                            ShortNameDTO.NY_NARMESTE_LEDER,
+                            SvartypeDTO.JA_NEI,
+                            "JA",
+                        ),
+                    ),
+                ),
+            ),
+        )
+
+        testDb.harSendtVarsel(sykmeldingId, VarselType.SENDT_SYKMELDING) shouldBeEqualTo false
+        verify(exactly = 0) { doknotifikasjonProducer.send(any(), any()) }
+    }
+}
