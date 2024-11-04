@@ -9,7 +9,7 @@ val logbackVersion = "1.5.12"
 val logstashEncoderVersion = "8.0"
 val prometheusVersion = "0.16.0"
 val mockkVersion = "1.13.13"
-val nimbusdsVersion = "9.44"
+val nimbusdsVersion = "9.45"
 val testContainerVersion = "1.20.3"
 val postgresVersion = "42.7.4"
 val flywayVersion = "10.20.1"
@@ -30,7 +30,7 @@ plugins {
     id("application")
     kotlin("jvm") version "2.0.21"
     id("com.diffplug.spotless") version "6.25.0"
-    id("com.gradleup.shadow") version "8.3.4"
+    id("com.gradleup.shadow") version "8.3.5"
 }
 
 application {
