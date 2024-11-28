@@ -2,7 +2,7 @@ group = "no.nav.syfo"
 version = "1.0.0"
 
 val coroutinesVersion = "1.9.0"
-val jacksonVersion = "2.18.1"
+val jacksonVersion = "2.18.2"
 val kluentVersion = "1.73"
 val ktorVersion = "3.0.1"
 val logbackVersion = "1.5.12"
@@ -16,9 +16,9 @@ val flywayVersion = "11.0.0"
 val hikariVersion = "6.2.1"
 val kafkaVersion = "3.9.0"
 val avroVersion = "1.12.0"
-val confluentVersion = "7.7.1"
+val confluentVersion = "7.7.2"
 val doknotifikasjonAvroVersion = "1.2021.06.22-11.27-265ce1fe1ab4"
-val kotlinVersion = "2.0.21"
+val kotlinVersion = "2.1.0"
 val junitJupiterVersion = "5.11.3"
 val ktfmtVersion = "0.44"
 
@@ -28,7 +28,7 @@ val commonsCodecVersion = "1.17.1"
 
 plugins {
     id("application")
-    kotlin("jvm") version "2.0.21"
+    kotlin("jvm") version "2.1.0"
     id("com.diffplug.spotless") version "6.25.0"
     id("com.gradleup.shadow") version "8.3.5"
 }
