@@ -1,5 +1,9 @@
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+
 group = "no.nav.syfo"
 version = "1.0.0"
+
+val javaVersion = JvmTarget.JVM_21
 
 val coroutinesVersion = "1.9.0"
 val jacksonVersion = "2.18.2"
@@ -22,7 +26,8 @@ val kotlinVersion = "2.1.0"
 val junitJupiterVersion = "5.11.3"
 val ktfmtVersion = "0.44"
 
-
+//Due to vulnerabilities
+val nettyCommonVersion = "4.1.115.Final"
 val snappyJavaVersion = "1.1.10.7"
 val commonsCodecVersion = "1.17.1"
 
@@ -62,6 +67,11 @@ dependencies {
     implementation("io.ktor:ktor-server-status-pages:$ktorVersion")
     implementation("io.ktor:ktor-server-content-negotiation:$ktorVersion")
     implementation("io.ktor:ktor-server-netty:$ktorVersion")
+    constraints {
+        implementation("io.netty:netty-common:$nettyCommonVersion") {
+            because("override transient from io.ktor:ktor-server-netty")
+        }
+    }
     implementation("io.ktor:ktor-serialization-jackson:$ktorVersion")
 
 
@@ -106,6 +116,12 @@ dependencies {
     }
 }
 
+kotlin {
+    compilerOptions {
+        jvmTarget = javaVersion
+    }
+}
+
 
 tasks {
 
@@ -123,8 +139,13 @@ tasks {
     }
 
     test {
-        useJUnitPlatform {}
-        testLogging.showStandardStreams = true
+        useJUnitPlatform {
+        }
+        testLogging {
+            events("skipped", "failed")
+            showStackTraces = true
+            exceptionFormat = org.gradle.api.tasks.testing.logging.TestExceptionFormat.FULL
+        }
     }
 
 
