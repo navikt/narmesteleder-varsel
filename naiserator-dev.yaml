@@ -47,7 +47,7 @@ spec:
     limits:
       memory: 1Gi
     requests:
-      cpu: 150m
+      cpu: 120m
       memory: 512Mi
   envFrom:
     - secret: narmesteleder-varsel-secret
