@@ -16,7 +16,7 @@ val mockkVersion = "1.13.16"
 val nimbusdsVersion = "10.0.1"
 val testContainerVersion = "1.20.4"
 val postgresVersion = "42.7.5"
-val flywayVersion = "11.1.1"
+val flywayVersion = "11.2.0"
 val hikariVersion = "6.2.1"
 val kafkaVersion = "3.9.0"
 val avroVersion = "1.12.0"
@@ -34,7 +34,7 @@ val commonsCodecVersion = "1.17.2"
 plugins {
     id("application")
     kotlin("jvm") version "2.1.0"
-    id("com.diffplug.spotless") version "7.0.1"
+    id("com.diffplug.spotless") version "7.0.2"
     id("com.gradleup.shadow") version "8.3.5"
 }
 
