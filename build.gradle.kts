@@ -22,18 +22,18 @@ val kafkaVersion = "3.9.0"
 val avroVersion = "1.12.0"
 val confluentVersion = "7.8.0"
 val doknotifikasjonAvroVersion = "1.2021.06.22-11.27-265ce1fe1ab4"
-val kotlinVersion = "2.1.0"
+val kotlinVersion = "2.1.10"
 val junitJupiterVersion = "5.11.4"
 val ktfmtVersion = "0.44"
 
 //Due to vulnerabilities
 val nettyCommonVersion = "4.1.117.Final"
 val snappyJavaVersion = "1.1.10.7"
-val commonsCodecVersion = "1.17.2"
+val commonsCodecVersion = "1.18.0"
 
 plugins {
     id("application")
-    kotlin("jvm") version "2.1.0"
+    kotlin("jvm") version "2.1.10"
     id("com.diffplug.spotless") version "7.0.2"
     id("com.gradleup.shadow") version "8.3.5"
 }
