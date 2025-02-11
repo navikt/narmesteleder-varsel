@@ -27,7 +27,7 @@ val junitJupiterVersion = "5.11.4"
 val ktfmtVersion = "0.44"
 
 //Due to vulnerabilities
-val nettyCommonVersion = "4.1.117.Final"
+val nettyCommonVersion = "4.1.118.Final"
 val snappyJavaVersion = "1.1.10.7"
 val commonsCodecVersion = "1.18.0"
 
