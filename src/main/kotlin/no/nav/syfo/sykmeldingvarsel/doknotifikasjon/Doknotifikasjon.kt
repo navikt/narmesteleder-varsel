@@ -9,7 +9,7 @@ const val SMS_TEKST =
 Hei!
 Du har fått tilgang til sykmeldingen til en av dine ansatte.
 Logg inn på "Min side - arbeidsgiver" og finn sykmeldingen der. 
-Vennlig hilsen NAV
+Vennlig hilsen Nav
 """
 const val EPOST_TEKST =
     """
@@ -24,7 +24,7 @@ const val EPOST_TEKST =
 <p>Logg inn på "Min side - arbeidsgiver", trykk på "Sykmeldte" og finn sykmeldingen der.</p>
 <p>Du må logge inn med BankID eller tilsvarende for at vi skal være sikre på at sykmeldingen kommer fram til rett person.</p>
 <p>Vennlig hilsen</p>
-<p> NAV</p>
+<p>Nav</p>
 </body>
 </html>
 """
