@@ -21,7 +21,7 @@ val hikariVersion = "6.2.1"
 val kafkaVersion = "3.9.0"
 val avroVersion = "1.12.0"
 val confluentVersion = "7.9.0"
-val doknotifikasjonAvroVersion = "1.2021.06.22-11.27-265ce1fe1ab4"
+val teamdokumenthandteringAvroSchema = "1.1.6"
 val kotlinVersion = "2.1.10"
 val junitJupiterVersion = "5.12.0"
 val ktfmtVersion = "0.44"
@@ -51,7 +51,6 @@ repositories {
     }
     mavenCentral()
     maven(url = "https://packages.confluent.io/maven/")
-    maven(url = "https://jitpack.io")
 }
 
 
@@ -78,7 +77,7 @@ dependencies {
     implementation("org.apache.kafka:kafka_2.12:$kafkaVersion")
     implementation("io.confluent:kafka-avro-serializer:$confluentVersion")
     implementation("org.apache.avro:avro:$avroVersion")
-    implementation("com.github.navikt:doknotifikasjon-schemas:$doknotifikasjonAvroVersion")
+    implementation("no.nav.teamdokumenthandtering:teamdokumenthandtering-avro-schemas:$teamdokumenthandteringAvroSchema")
 
     implementation("ch.qos.logback:logback-classic:$logbackVersion")
     implementation("net.logstash.logback:logstash-logback-encoder:$logstashEncoderVersion")
