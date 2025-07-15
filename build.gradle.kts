@@ -1,3 +1,4 @@
+import kotlinx.coroutines.flow.merge
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 group = "no.nav.syfo"
@@ -125,6 +126,9 @@ kotlin {
 tasks {
 
     shadowJar {
+        mergeServiceFiles {
+
+        }
         archiveBaseName.set("app")
         archiveClassifier.set("")
         isZip64 = true
