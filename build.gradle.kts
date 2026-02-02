@@ -7,9 +7,9 @@ version = "1.0.0"
 val javaVersion = JvmTarget.JVM_21
 
 val coroutinesVersion = "1.10.2"
-val jacksonVersion = "2.20.1"
+val jacksonVersion = "2.20.2"
 val kluentVersion = "1.73"
-val ktorVersion = "3.3.1"
+val ktorVersion = "3.4.0"
 val logbackVersion = "1.5.20"
 val logstashEncoderVersion = "9.0"
 val prometheusVersion = "0.16.0"
@@ -21,16 +21,14 @@ val flywayVersion = "11.15.0"
 val hikariVersion = "7.0.2"
 val kafkaVersion = "3.9.1"
 val avroVersion = "1.12.1"
-val confluentVersion = "8.1.0"
+val confluentVersion = "8.1.1"
 val teamdokumenthandteringAvroSchema = "1.1.6"
 val kotlinVersion = "2.2.21"
 val junitJupiterVersion = "6.0.1"
 val ktfmtVersion = "0.44"
 
 //Due to vulnerabilities
-val nettyCommonVersion = "4.2.7.Final"
 val snappyJavaVersion = "1.1.10.8"
-val commonsCodecVersion = "1.19.0"
 
 plugins {
     id("application")
@@ -67,11 +65,6 @@ dependencies {
     implementation("io.ktor:ktor-server-status-pages:$ktorVersion")
     implementation("io.ktor:ktor-server-content-negotiation:$ktorVersion")
     implementation("io.ktor:ktor-server-netty:$ktorVersion")
-    constraints {
-        implementation("io.netty:netty-common:$nettyCommonVersion") {
-            because("override transient from io.ktor:ktor-server-netty")
-        }
-    }
     implementation("io.ktor:ktor-serialization-jackson:$ktorVersion")
 
 
@@ -107,12 +100,6 @@ dependencies {
     testImplementation("org.testcontainers:postgresql:$testContainerVersion")
     testImplementation("io.ktor:ktor-server-test-host:$ktorVersion") {
         exclude(group = "org.eclipse.jetty")
-    }
-    constraints {
-        testImplementation("commons-codec:commons-codec:$commonsCodecVersion") {
-            because("override transient version from io.ktor:ktor-server-test-host due to security vulnerability\n" +
-                "    // https://devhub.checkmarx.com/cve-details/Cxeb68d52e-5509/")
-        }
     }
 }
 
