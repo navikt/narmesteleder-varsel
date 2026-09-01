@@ -8,6 +8,8 @@ val javaVersion = JvmTarget.JVM_21
 
 val coroutinesVersion = "1.10.2"
 val jacksonVersion = "2.20.2"
+val jackson3Version = "3.0.4"
+val jackson3JavaTimeVersion = "3.0.0-rc2"
 val kluentVersion = "1.73"
 val ktorVersion = "3.4.0"
 val logbackVersion = "1.5.26"
@@ -79,6 +81,9 @@ dependencies {
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin:$jacksonVersion")
     implementation("com.fasterxml.jackson.dataformat:jackson-dataformat-xml:$jacksonVersion")
     implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310:$jacksonVersion")
+    implementation("tools.jackson.core:jackson-databind:$jackson3Version")
+    implementation("tools.jackson.module:jackson-module-kotlin:$jackson3Version")
+    implementation("tools.jackson.datatype:jackson-datatype-jsr310:$jackson3JavaTimeVersion")
 
     implementation("org.postgresql:postgresql:$postgresVersion")
     implementation("com.zaxxer:HikariCP:$hikariVersion")
@@ -141,4 +146,3 @@ tasks {
     }
 
 }
-
