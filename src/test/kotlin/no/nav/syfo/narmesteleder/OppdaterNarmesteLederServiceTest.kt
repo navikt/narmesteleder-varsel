@@ -25,7 +25,7 @@ internal class OppdaterNarmesteLederServiceTest {
     internal fun `OppdaterNarmesteLederService Oppretter ny nærmeste leder hvis den ikke finnes fra før og er aktiv`() {
         val narmesteLederId = UUID.randomUUID()
         oppdaterNarmesteLederService.handterMottattNarmesteLederOppdatering(
-            getNarmesteLederLeesah(narmesteLederId),
+            getNarmesteLederLeesah(narmesteLederId)
         )
 
         val narmesteLeder = testDb.getNarmestelederRelasjon(narmesteLederId)
@@ -36,7 +36,7 @@ internal class OppdaterNarmesteLederServiceTest {
     internal fun `OppdaterNarmesteLederService Ignorerer melding om ny nærmeste leder hvis den ikke finnes fra før og er inaktiv`() {
         val narmesteLederId = UUID.randomUUID()
         oppdaterNarmesteLederService.handterMottattNarmesteLederOppdatering(
-            getNarmesteLederLeesah(narmesteLederId, aktivTom = LocalDate.now()),
+            getNarmesteLederLeesah(narmesteLederId, aktivTom = LocalDate.now())
         )
 
         val narmesteLeder = testDb.getNarmestelederRelasjon(narmesteLederId)
@@ -47,14 +47,14 @@ internal class OppdaterNarmesteLederServiceTest {
     internal fun `OppdaterNarmesteLederService Oppdaterer nærmeste leder hvis den finnes fra før og er aktiv`() {
         val narmesteLederId = UUID.randomUUID()
         oppdaterNarmesteLederService.handterMottattNarmesteLederOppdatering(
-            getNarmesteLederLeesah(narmesteLederId),
+            getNarmesteLederLeesah(narmesteLederId)
         )
         oppdaterNarmesteLederService.handterMottattNarmesteLederOppdatering(
             getNarmesteLederLeesah(
                 narmesteLederId,
                 telefonnummer = "98989898",
                 epost = "mail@banken.no",
-            ),
+            )
         )
 
         val narmesteLeder = testDb.getNarmestelederRelasjon(narmesteLederId)
@@ -67,10 +67,10 @@ internal class OppdaterNarmesteLederServiceTest {
     internal fun `OppdaterNarmesteLederService Sletter nærmeste leder hvis den finnes fra før og er inaktiv`() {
         val narmesteLederId = UUID.randomUUID()
         oppdaterNarmesteLederService.handterMottattNarmesteLederOppdatering(
-            getNarmesteLederLeesah(narmesteLederId),
+            getNarmesteLederLeesah(narmesteLederId)
         )
         oppdaterNarmesteLederService.handterMottattNarmesteLederOppdatering(
-            getNarmesteLederLeesah(narmesteLederId, aktivTom = LocalDate.now()),
+            getNarmesteLederLeesah(narmesteLederId, aktivTom = LocalDate.now())
         )
 
         val narmesteLeder = testDb.getNarmestelederRelasjon(narmesteLederId)

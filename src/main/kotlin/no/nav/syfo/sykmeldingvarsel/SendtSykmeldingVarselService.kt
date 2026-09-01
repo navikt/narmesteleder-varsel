@@ -31,7 +31,7 @@ class SendtSykmeldingVarselService(
         val harSendtSammeVarsel =
             database.harSendtVarsel(
                 sendtSykmelding.kafkaMetadata.sykmeldingId,
-                VarselType.SENDT_SYKMELDING
+                VarselType.SENDT_SYKMELDING,
             )
 
         if (harSendtSammeVarsel) {
@@ -42,7 +42,7 @@ class SendtSykmeldingVarselService(
             val narmesteLeder =
                 database.finnNarmestelederForSykmeldt(
                     fnr = sendtSykmelding.kafkaMetadata.fnr,
-                    orgnummer = sendtSykmelding.event.arbeidsgiver.orgnummer
+                    orgnummer = sendtSykmelding.event.arbeidsgiver.orgnummer,
                 )
             if (narmesteLeder == null) {
                 log.info(
@@ -54,7 +54,7 @@ class SendtSykmeldingVarselService(
                     tilNotifikasjonMedkontaktInfo(bestillingId.toString(), narmesteLeder)
                 doknotifikasjonProducer.send(
                     doknotifikasjon,
-                    sendtSykmelding.kafkaMetadata.sykmeldingId
+                    sendtSykmelding.kafkaMetadata.sykmeldingId,
                 )
                 database.lagreSendtVarsel(
                     SendtVarsel(
@@ -63,7 +63,7 @@ class SendtSykmeldingVarselService(
                         bestillingId = bestillingId,
                         varselType = VarselType.SENDT_SYKMELDING,
                         timestamp = OffsetDateTime.now(ZoneOffset.UTC),
-                    ),
+                    )
                 )
                 SENDT_SYKMELDING_VARSEL_COUNTER.inc()
                 log.info(

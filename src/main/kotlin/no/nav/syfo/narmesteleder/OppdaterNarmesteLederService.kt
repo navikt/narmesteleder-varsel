@@ -9,9 +9,7 @@ import no.nav.syfo.narmesteleder.db.slettNarmesteLeder
 import no.nav.syfo.narmesteleder.kafka.NarmesteLederLeesah
 import no.nav.syfo.narmesteleder.model.toNarmesteLeder
 
-class OppdaterNarmesteLederService(
-    private val database: DatabaseInterface,
-) {
+class OppdaterNarmesteLederService(private val database: DatabaseInterface) {
     fun handterMottattNarmesteLederOppdatering(narmesteLederLeesah: NarmesteLederLeesah) {
         val narmesteLeder = database.getNarmestelederRelasjon(narmesteLederLeesah.narmesteLederId)
 
