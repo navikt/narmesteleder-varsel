@@ -42,11 +42,7 @@ fun main() {
     val applicationState = ApplicationState()
     val database = Database(env)
 
-    val applicationEngine =
-        createApplicationEngine(
-            env,
-            applicationState,
-        )
+    val applicationEngine = createApplicationEngine(env, applicationState)
     val oppdaterNarmesteLederService = OppdaterNarmesteLederService(database)
     val kafkaConsumer =
         KafkaConsumer(
@@ -79,22 +75,22 @@ fun main() {
                 .apply {
                     setProperty(
                         KafkaAvroSerializerConfig.SCHEMA_REGISTRY_URL_CONFIG,
-                        env.schemaRegistryUrl
+                        env.schemaRegistryUrl,
                     )
                     setProperty(
                         KafkaAvroSerializerConfig.USER_INFO_CONFIG,
-                        "${env.kafkaSchemaRegistryUsername}:${env.kafkaSchemaRegistryPassword}"
+                        "${env.kafkaSchemaRegistryUsername}:${env.kafkaSchemaRegistryPassword}",
                     )
                     setProperty(
                         KafkaAvroSerializerConfig.BASIC_AUTH_CREDENTIALS_SOURCE,
-                        "USER_INFO"
+                        "USER_INFO",
                     )
                 }
                 .toProducerConfig(
                     "${env.applicationName}-producer",
                     valueSerializer = KafkaAvroSerializer::class,
-                    keySerializer = StringSerializer::class
-                ),
+                    keySerializer = StringSerializer::class,
+                )
         )
     val doknotifikasjonProducer =
         DoknotifikasjonProducer(kafkaProducerDoknotifikasjon, env.doknotifikasjonTopic)
@@ -124,7 +120,7 @@ fun main() {
 @DelicateCoroutinesApi
 fun startBackgroundJob(
     applicationState: ApplicationState,
-    block: suspend CoroutineScope.() -> Unit
+    block: suspend CoroutineScope.() -> Unit,
 ) {
     GlobalScope.launch(Dispatchers.Unbounded) {
         try {

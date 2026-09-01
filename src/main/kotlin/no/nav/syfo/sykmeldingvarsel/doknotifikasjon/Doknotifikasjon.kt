@@ -31,7 +31,7 @@ const val EPOST_TEKST =
 
 fun tilNotifikasjonMedkontaktInfo(
     bestillingsId: String,
-    narmesteLeder: NarmesteLeder
+    narmesteLeder: NarmesteLeder,
 ): NotifikasjonMedkontaktInfo {
     return NotifikasjonMedkontaktInfo.newBuilder()
         .setBestillingsId(bestillingsId)

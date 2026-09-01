@@ -55,7 +55,7 @@ internal class SendtSykmeldingVarselServiceTest {
                 aktivFom = LocalDate.now(),
                 arbeidsgiverForskutterer = true,
                 timestamp = OffsetDateTime.now(ZoneOffset.UTC),
-            ),
+            )
         )
 
         sendtSykmeldingVarselService.handterSendtSykmelding(
@@ -74,10 +74,10 @@ internal class SendtSykmeldingVarselServiceTest {
                             ShortNameDTO.NY_NARMESTE_LEDER,
                             SvartypeDTO.JA_NEI,
                             "NEI",
-                        ),
+                        )
                     ),
                 ),
-            ),
+            )
         )
 
         testDb.harSendtVarsel(sykmeldingId, VarselType.SENDT_SYKMELDING) shouldBeEqualTo true
@@ -99,7 +99,7 @@ internal class SendtSykmeldingVarselServiceTest {
                 aktivFom = LocalDate.now(),
                 arbeidsgiverForskutterer = true,
                 timestamp = OffsetDateTime.now(ZoneOffset.UTC),
-            ),
+            )
         )
 
         sendtSykmeldingVarselService.handterSendtSykmelding(
@@ -111,7 +111,7 @@ internal class SendtSykmeldingVarselServiceTest {
                     source = "user",
                 ),
                 SendtEvent(ArbeidsgiverStatus(orgnummer = "999888"), emptyList()),
-            ),
+            )
         )
 
         testDb.harSendtVarsel(sykmeldingId, VarselType.SENDT_SYKMELDING) shouldBeEqualTo false
@@ -133,7 +133,7 @@ internal class SendtSykmeldingVarselServiceTest {
                 aktivFom = LocalDate.now(),
                 arbeidsgiverForskutterer = true,
                 timestamp = OffsetDateTime.now(ZoneOffset.UTC),
-            ),
+            )
         )
         testDb.lagreSendtVarsel(
             SendtVarsel(
@@ -142,7 +142,7 @@ internal class SendtSykmeldingVarselServiceTest {
                 bestillingId = UUID.randomUUID(),
                 varselType = VarselType.SENDT_SYKMELDING,
                 timestamp = OffsetDateTime.now(ZoneOffset.UTC),
-            ),
+            )
         )
 
         sendtSykmeldingVarselService.handterSendtSykmelding(
@@ -154,7 +154,7 @@ internal class SendtSykmeldingVarselServiceTest {
                     source = "user",
                 ),
                 SendtEvent(ArbeidsgiverStatus(orgnummer), emptyList()),
-            ),
+            )
         )
 
         verify(exactly = 0) { doknotifikasjonProducer.send(any(), any()) }
@@ -172,7 +172,7 @@ internal class SendtSykmeldingVarselServiceTest {
                     source = "user",
                 ),
                 SendtEvent(ArbeidsgiverStatus(orgnummer), emptyList()),
-            ),
+            )
         )
 
         testDb.harSendtVarsel(sykmeldingId, VarselType.SENDT_SYKMELDING) shouldBeEqualTo false
@@ -194,7 +194,7 @@ internal class SendtSykmeldingVarselServiceTest {
                 aktivFom = LocalDate.now(),
                 arbeidsgiverForskutterer = true,
                 timestamp = OffsetDateTime.now(ZoneOffset.UTC),
-            ),
+            )
         )
 
         sendtSykmeldingVarselService.handterSendtSykmelding(
@@ -213,10 +213,10 @@ internal class SendtSykmeldingVarselServiceTest {
                             ShortNameDTO.NY_NARMESTE_LEDER,
                             SvartypeDTO.JA_NEI,
                             "JA",
-                        ),
+                        )
                     ),
                 ),
-            ),
+            )
         )
 
         testDb.harSendtVarsel(sykmeldingId, VarselType.SENDT_SYKMELDING) shouldBeEqualTo false

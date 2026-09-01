@@ -7,7 +7,7 @@ import org.apache.kafka.clients.producer.ProducerRecord
 
 class DoknotifikasjonProducer(
     private val kafkaProducer: KafkaProducer<String, NotifikasjonMedkontaktInfo>,
-    private val topicName: String
+    private val topicName: String,
 ) {
     fun send(notifikasjonMedkontaktInfo: NotifikasjonMedkontaktInfo, sykmeldingId: String) {
         try {
@@ -16,14 +16,14 @@ class DoknotifikasjonProducer(
                     ProducerRecord(
                         topicName,
                         notifikasjonMedkontaktInfo.getBestillingsId(),
-                        notifikasjonMedkontaktInfo
+                        notifikasjonMedkontaktInfo,
                     )
                 )
                 .get()
         } catch (ex: Exception) {
             log.error(
                 "Noe gikk galt ved skriving av varselbestilling med bestillingsid ${notifikasjonMedkontaktInfo.getBestillingsId()}, sykmeldingid $sykmeldingId",
-                ex.message
+                ex.message,
             )
             throw ex
         }

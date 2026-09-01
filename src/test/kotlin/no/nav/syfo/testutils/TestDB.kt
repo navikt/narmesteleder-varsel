@@ -5,16 +5,16 @@ import io.mockk.mockk
 import no.nav.syfo.Environment
 import no.nav.syfo.application.db.Database
 import no.nav.syfo.application.db.DatabaseInterface
-import org.testcontainers.containers.PostgreSQLContainer
+import org.testcontainers.postgresql.PostgreSQLContainer
 
-class PsqlContainer : PostgreSQLContainer<PsqlContainer>("postgres:15")
+class PsqlContainer : PostgreSQLContainer("postgres:15")
 
 class TestDB private constructor() {
 
     companion object {
         val database: DatabaseInterface
         private val env = mockk<Environment>()
-        private val psqlContainer: PsqlContainer =
+        private val psqlContainer: PostgreSQLContainer =
             PsqlContainer()
                 .withExposedPorts(5432)
                 .withUsername("username")
