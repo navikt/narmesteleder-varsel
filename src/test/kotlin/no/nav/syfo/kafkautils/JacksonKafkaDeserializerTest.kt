@@ -26,7 +26,9 @@ internal class JacksonKafkaDeserializerTest {
               "timestamp": "2026-01-01T12:00:00Z",
               "unknown": "ignored"
             }
-            """.trimIndent().encodeToByteArray()
+            """
+                .trimIndent()
+                .encodeToByteArray()
 
         val actual = JacksonKafkaDeserializer(NarmesteLederLeesah::class).deserialize("topic", data)
 
