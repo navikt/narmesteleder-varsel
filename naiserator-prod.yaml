@@ -48,7 +48,7 @@ spec:
     limits:
       memory: 3Gi
     requests:
-      cpu: 80m
+      cpu: 120m
       memory: 950Mi
   kafka:
     pool: nav-prod
