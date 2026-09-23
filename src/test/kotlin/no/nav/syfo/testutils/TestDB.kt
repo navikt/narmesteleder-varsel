@@ -7,7 +7,7 @@ import no.nav.syfo.application.db.Database
 import no.nav.syfo.application.db.DatabaseInterface
 import org.testcontainers.postgresql.PostgreSQLContainer
 
-class PsqlContainer : PostgreSQLContainer("postgres:15")
+class PsqlContainer : PostgreSQLContainer("postgres:16")
 
 class TestDB private constructor() {
 
