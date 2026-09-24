@@ -12,24 +12,24 @@ val logbackVersion = "1.6.3"
 val logstashEncoderVersion = "9.0"
 val prometheusVersion = "0.16.0"
 val mockkVersion = "1.14.11"
-val nimbusdsVersion = "10.5"
+val nimbusdsVersion = "10.10"
 val testcontainerVersion = "2.0.5"
 val postgresVersion = "42.7.13"
-val flywayVersion = "13.4.0"
+val flywayVersion = "13.7.0"
 val hikariVersion = "7.1.0"
 val kafkaVersion = "4.3.1"
-val avroVersion = "1.12.1"
+val avroVersion = "1.12.2"
 val confluentVersion = "8.1.1"
-val teamdokumenthandteringAvroSchema = "1.1.6"
+val teamdokumenthandteringAvroSchema = "2.0.0"
 val junitJupiterVersion = "6.1.3"
 val ktfmtVersion = "0.56"
 
 
 plugins {
     id("application")
-    kotlin("jvm") version "2.4.10"
-    id("com.diffplug.spotless") version "8.10.1"
-    id("com.gradleup.shadow") version "8.3.8"
+    kotlin("jvm") version "2.4.20"
+    id("com.diffplug.spotless") version "8.10.2"
+    id("com.gradleup.shadow") version "9.6.1"
 }
 
 application {
